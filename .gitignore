@@ -1,0 +1,12 @@
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node / Dependencies (future)
+node_modules/
+dist/
+build/
+.env
+.env.local

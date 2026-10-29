@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>ContaPaso - Guía Didáctica de Kardex e Inventarios</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #070a13; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+
+    .mesh-radial-1 {
+      background: radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.16) 0%, transparent 45%),
+                  radial-gradient(circle at 85% 25%, rgba(139, 92, 246, 0.22) 0%, transparent 50%),
+                  radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.12) 0%, transparent 55%),
+                  radial-gradient(circle at 75% 90%, rgba(59, 130, 246, 0.18) 0%, transparent 40%);
+    }
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .glass-card {
+      background: rgba(19, 27, 54, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .neon-glow-blue {
+      box-shadow: 0 0 25px -4px rgba(56, 189, 248, 0.35), 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+    }
+    .neon-glow-emerald {
+      box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.4);
+    }
+    .neon-glow-purple {
+      box-shadow: 0 0 25px -4px rgba(168, 85, 247, 0.35);
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#070a13",
+            "surface-dim": "#070a13",
+            "surface-bright": "#26314f",
+            "surface-container-lowest": "#04060c",
+            "surface-container-low": "#0d1222",
+            "surface-container": "#111827",
+            "surface-container-high": "#161d31",
+            "surface-container-highest": "#222a40",
+            "on-surface": "#f1f5f9",
+            "on-surface-variant": "#cbd5e1",
+            "primary": "#38bdf8",
+            "primary-container": "#2563eb",
+            "secondary": "#10b981",
+            "secondary-container": "#059669",
+            "tertiary": "#a78bfa",
+            "tertiary-container": "#7c3aed",
+            "outline": "#94a3b8",
+            "outline-variant": "#334155"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"],
+            heading: ["Sora", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased min-h-screen selection:bg-cyan-500/30 selection:text-cyan-200 relative overflow-x-hidden">
+
+  <!-- Ambient Glowing Background Meshes -->
+  <div class="fixed inset-0 pointer-events-none mesh-radial-1 z-0"></div>
+  <div class="fixed -top-40 -left-32 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none z-0"></div>
+  <div class="fixed top-1/3 -right-32 w-[30rem] h-[30rem] bg-purple-600/20 rounded-full blur-[140px] pointer-events-none z-0"></div>
+  <div class="fixed bottom-0 left-1/4 w-[36rem] h-80 bg-emerald-600/15 rounded-full blur-[130px] pointer-events-none z-0"></div>
+
+  <!-- Header Navigation Bar -->
+  <header class="fixed top-0 w-full z-50 bg-[#070a13]/85 backdrop-blur-2xl border-b border-cyan-500/20 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+    <div class="h-20 w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-600 to-indigo-600 p-0.5 shadow-md shadow-cyan-500/20 flex items-center justify-center">
+          <div class="w-full h-full bg-[#070a13] rounded-[10px] flex items-center justify-center">
+            <span class="material-symbols-outlined text-[22px] text-cyan-400">table_chart_view</span>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-heading text-lg tracking-tight bg-gradient-to-r from-white via-cyan-100 to-sky-300 bg-clip-text text-transparent font-extrabold">ContaPaso</span>
+          <span class="font-mono text-[10px] text-cyan-400/90 font-medium tracking-wider uppercase">Taller Didáctico de Kardex</span>
+        </div>
+      </div>
+
+      <!-- Steps Flow Navigation -->
+      <nav class="hidden lg:flex items-center gap-1 p-1 rounded-2xl bg-surface-container-low/80 backdrop-blur-md border border-cyan-500/20 shadow-inner">
+        <button id="nav-step-1" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white transition-all shadow-[0_0_15px_rgba(37,99,235,0.4)] border border-cyan-300/40 flex items-center gap-1.5" onclick="goToStep(1)">
+          <span>1. Configurar Taller</span>
+        </button>
+        <button id="nav-step-2" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-300 hover:bg-surface-container-high/80 transition-colors flex items-center gap-1.5" onclick="goToStep(2)">
+          <span>2. Operaciones</span>
+        </button>
+        <button id="nav-step-3" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-300 hover:bg-surface-container-high/80 transition-colors flex items-center gap-1.5" onclick="goToStep(3)">
+          <span>3. Kardex Paso a Paso</span>
+        </button>
+        <button id="nav-step-4" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-300 hover:bg-surface-container-high/80 transition-colors flex items-center gap-1.5" onclick="goToStep(4)">
+          <span>4. Comparativa</span>
+        </button>
+      </nav>
+
+      <!-- Right Header Tools -->
+      <div class="flex items-center gap-2.5 shrink-0">
+        <!-- 8 FAQs Button -->
+        <button onclick="openFaqModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/60 text-purple-200 text-xs font-bold border border-purple-400/40 transition-all shadow-sm active:scale-95" title="Ver 8 preguntas frecuentes para entender el taller">
+          <span class="material-symbols-outlined text-[17px] text-purple-300">quiz</span>
+          <span class="hidden sm:inline">8 Preguntas Frecuentes</span>
+          <span class="sm:hidden font-mono">FAQ</span>
+        </button>
+
+        <!-- Direct Formulas Button -->
+        <button onclick="openFormulasModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-high/80 hover:bg-surface-bright/90 text-on-surface text-xs font-semibold border border-blue-500/30 hover:border-cyan-400/50 transition-all shadow-sm active:scale-95" title="Ver fórmulas matemáticas directas">
+          <span class="material-symbols-outlined text-[17px] text-amber-300">lightbulb</span>
+          <span class="hidden md:inline">Fórmulas</span>
+        </button>
+
+        <!-- Active Status Badge -->
+        <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-400/40 neon-glow-emerald">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="font-mono text-[10px] text-emerald-300 font-bold tracking-wide uppercase">En Vivo</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content Space -->
+  <main class="w-full pt-24 pb-16 bg-transparent min-h-screen relative z-10">
+    <div class="w-full max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
+
+      <!-- STEP 1: CONFIGURAR TALLER -->
+      <section id="section-step-1" class="flex flex-col gap-6">
+
+        <!-- Top Step Ribbon & Quick Presets -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 glass-panel px-5 py-3 rounded-2xl border border-cyan-500/25 shadow-[0_10px_35px_rgba(0,0,0,0.45)]">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-gradient-to-r from-blue-600/30 to-cyan-500/30 border border-cyan-400/50 text-cyan-300 font-mono text-[11px] uppercase tracking-wider font-extrabold shadow-sm">
+              Paso 1 de 4
+            </span>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="font-bold tracking-tight text-white">Parámetros del Taller</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-400/30 font-semibold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>Modo Didáctico
+              </span>
+            </div>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 text-xs text-slate-300 font-medium">
+              <span class="text-slate-400">Ejemplo rápido:</span>
+              <button onclick="applyPreset('prd')" type="button" class="px-3 py-1.5 rounded-xl bg-surface-container-high/90 hover:bg-blue-600/30 text-cyan-300 text-xs font-bold border border-cyan-500/35 hover:border-cyan-400 transition-all flex items-center gap-1 active:scale-95 shadow-sm">
+                <span class="material-symbols-outlined text-[15px] text-amber-300">verified</span> Caso del PRD
+              </button>
+              <button onclick="applyPreset('retail')" type="button" class="px-3 py-1.5 rounded-xl bg-surface-container-high/90 hover:bg-emerald-600/30 text-emerald-300 text-xs font-bold border border-emerald-500/35 hover:border-emerald-400 transition-all flex items-center gap-1 active:scale-95 shadow-sm">
+                <span class="material-symbols-outlined text-[15px] text-emerald-400">store</span> Retail
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Header Section -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="flex flex-col gap-1 max-w-2xl">
+            <div class="inline-flex items-center gap-1.5 text-cyan-400 text-xs font-extrabold tracking-wider uppercase">
+              <span class="material-symbols-outlined text-[17px] text-cyan-400 drop-shadow-[0_0_6px_#38bdf8]">tune</span>
+              <span class="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Configuración Inicial del Ejercicio</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-heading font-extrabold text-white tracking-tight leading-snug">
+              Elige cómo resolverás el taller
+            </h1>
+            <p class="text-sm text-slate-300 font-normal">
+              Selecciona el sistema contable y el método de valoración para adaptar la plantilla y las explicaciones en tiempo real.
+            </p>
+          </div>
+
+          <!-- Scenario & Currency Toggles -->
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <button id="btn-toggle-scenario" onclick="toggleScenario()" type="button" class="group px-3.5 py-2 rounded-xl bg-surface-container/90 hover:bg-surface-container-high border border-cyan-500/30 hover:border-cyan-400/60 flex items-center gap-2 text-xs transition-all cursor-pointer shadow-sm">
+              <span class="text-slate-400 font-medium">Contexto de precios:</span>
+              <span id="scenario-pill" class="font-bold text-emerald-300 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
+                <span class="material-symbols-outlined text-[15px] text-emerald-400">trending_up</span> Inflación (Precios al alza)
+              </span>
+              <span class="material-symbols-outlined text-[14px] text-slate-400 group-hover:rotate-180 transition-transform">swap_horiz</span>
+            </button>
+            <div class="px-3.5 py-2 rounded-xl bg-surface-container/90 border border-blue-500/30 flex items-center gap-1.5 text-xs text-slate-300 shadow-sm">
+              <span class="material-symbols-outlined text-[15px] text-cyan-400">paid</span>
+              <span class="text-white font-bold tracking-wide">Moneda: COP ($)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. Exercise Type Selector: Kardex Permanente vs Inventario Periódico -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="system-selector-group">
+          
+          <!-- Card 1: Kardex Permanente -->
+          <div id="card-permanente" onclick="selectSystem('permanente')" class="group relative rounded-2xl p-6 flex flex-col justify-between cursor-pointer transition-all duration-300 glass-panel border-2 border-cyan-400 neon-glow-blue hover:shadow-[0_0_35px_rgba(56,189,248,0.45)]">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="flex items-center gap-3">
+                  <div id="icon-container-perm" class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/30 to-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(56,189,248,0.3)]">
+                    <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">table_chart_view</span>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h2 class="text-lg font-bold text-white tracking-tight">Kardex Permanente</h2>
+                      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 flex items-center gap-1.5 shadow-[0_0_8px_rgba(52,211,153,0.3)]">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                        Recomendado
+                      </span>
+                    </div>
+                    <span class="text-xs text-cyan-300 font-semibold tracking-wide">Control Perpetuo Unidad por Unidad</span>
+                  </div>
+                </div>
+
+                <!-- Radio Check Indicator -->
+                <div id="check-permanente" class="w-6 h-6 rounded-full border-2 border-cyan-300 bg-gradient-to-tr from-blue-600 to-cyan-400 text-white flex items-center justify-center transition-all shadow-[0_0_10px_#38bdf8]">
+                  <span class="material-symbols-outlined text-[15px] font-bold">check</span>
+                </div>
+              </div>
+
+              <!-- Matrix Preview -->
+              <div class="w-full bg-surface-container-lowest/90 rounded-xl p-3.5 my-3 border border-cyan-500/30 shadow-inner">
+                <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-slate-700/60">
+                  <span class="text-emerald-400 drop-shadow-[0_0_6px_rgba(52,211,153,0.3)]">Entradas</span>
+                  <span class="text-rose-400">Salidas (Costo)</span>
+                  <span class="text-cyan-300">Saldos en Stock</span>
+                </div>
+                <div class="grid grid-cols-3 text-center text-xs py-2 border-b border-slate-800/80 items-center font-mono">
+                  <span class="text-emerald-300 font-bold bg-emerald-500/10 py-0.5 rounded border border-emerald-500/20">+50 @ $12.000</span>
+                  <span class="text-slate-500 font-semibold">--</span>
+                  <span class="text-cyan-300 font-bold bg-cyan-500/15 py-0.5 rounded border border-cyan-400/30">50 unids</span>
+                </div>
+                <div class="grid grid-cols-3 text-center text-xs py-2 items-center font-mono">
+                  <span class="text-slate-500 font-semibold">--</span>
+                  <span class="text-rose-400 font-bold bg-rose-500/10 py-0.5 rounded border border-rose-500/20">-20 @ $12.000</span>
+                  <span class="text-white font-bold bg-slate-800/90 py-0.5 rounded border border-slate-700">30 unids</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="flex items-center justify-between pt-1 text-xs">
+              <div class="flex items-center gap-1.5 text-slate-300 font-medium">
+                <span class="material-symbols-outlined text-[16px] text-amber-300">flash_on</span>
+                <span>Calcula el costo en cada venta al instante</span>
+              </div>
+              <span class="text-[11px] font-bold text-cyan-300 px-2.5 py-0.5 rounded-full bg-cyan-950/70 border border-cyan-400/40">NIIF / NIC 2</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Inventario Periódico -->
+          <div id="card-periodico" onclick="selectSystem('periodico')" class="group relative rounded-2xl p-6 flex flex-col justify-between cursor-pointer transition-all duration-300 glass-panel hover:bg-surface-container-high/80 border-2 border-slate-700/60 hover:border-slate-500 shadow-lg">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="flex items-center gap-3">
+                  <div id="icon-container-peri" class="w-12 h-12 rounded-xl bg-surface-container-high/80 border border-slate-700 flex items-center justify-center text-slate-400 group-hover:scale-105 group-hover:text-purple-300 group-hover:border-purple-400/50 transition-all">
+                    <span class="material-symbols-outlined text-[28px]">inventory_2</span>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h2 class="text-lg font-bold text-white tracking-tight">Inventario Periódico</h2>
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-500/15 text-purple-300 border border-purple-500/30">Juego de Inventarios</span>
+                    </div>
+                    <span class="text-xs text-slate-400 font-medium">Cálculo Global al Cierre de Periodo</span>
+                  </div>
+                </div>
+
+                <!-- Radio Check Indicator -->
+                <div id="check-periodico" class="w-6 h-6 rounded-full border-2 border-slate-600 bg-transparent flex items-center justify-center transition-all">
+                  <span class="material-symbols-outlined text-[15px] font-bold hidden">check</span>
+                </div>
+              </div>
+
+              <!-- Formula Visualizer -->
+              <div class="w-full bg-surface-container-lowest/90 rounded-xl p-3.5 my-3 border border-slate-800 flex flex-col justify-center gap-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-400 text-[11px] uppercase font-bold tracking-wider">Fórmula Fundamental:</span>
+                  <span class="font-mono text-emerald-300 font-bold text-xs bg-emerald-950/60 px-2.5 py-0.5 rounded-lg border border-emerald-400/40">CV = II + Compras - IF</span>
+                </div>
+                <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden flex my-1 border border-slate-800">
+                  <div class="bg-gradient-to-r from-blue-500 to-cyan-400 w-1/3 h-full" title="Inventario Inicial"></div>
+                  <div class="bg-gradient-to-r from-emerald-500 to-teal-300 w-1/2 h-full" title="Compras"></div>
+                  <div class="bg-rose-500/80 w-1/6 h-full" title="Inventario Final"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-slate-400 font-semibold font-mono">
+                  <span>(II) Inicial</span>
+                  <span>(+) Compras Netas</span>
+                  <span>(-) Conteo Físico Final</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="flex items-center justify-between pt-1 text-xs">
+              <div class="flex items-center gap-1.5 text-slate-300">
+                <span class="material-symbols-outlined text-[16px] text-purple-400">calendar_month</span>
+                <span>No registra el costo en cada venta individual</span>
+              </div>
+              <span class="text-[11px] font-semibold text-slate-400 px-2.5 py-0.5 rounded-full bg-surface-container-high border border-slate-700">Taller Teórico</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 2. Method Selector Grid (PEPS, UEPS, Promedio Ponderado) -->
+        <div class="glass-panel rounded-2xl p-6 border border-blue-500/30 shadow-[0_10px_30px_rgba(0,0,0,0.4)] flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <div class="p-1.5 rounded-xl bg-cyan-500/15 border border-cyan-400/40 text-cyan-300">
+                <span class="material-symbols-outlined text-[20px] align-middle">swap_calls</span>
+              </div>
+              <div>
+                <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Método de Valuación de Salidas</h2>
+                <p class="text-xs text-slate-300">Define de qué lote se toman las unidades vendidas:</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-start sm:self-auto">
+              <span class="text-xs text-slate-400">Comparativa disponible:</span>
+              <span class="text-xs font-bold px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/40 flex items-center gap-1.5 shadow-[0_0_10px_rgba(167,139,250,0.3)]">
+                <span class="material-symbols-outlined text-[14px]">compare</span> 3 métodos evaluados
+              </span>
+            </div>
+          </div>
+
+          <!-- The 3 Method Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5" id="methods-grid">
+            
+            <!-- PEPS Card -->
+            <div id="btn-method-peps" onclick="selectMethod('peps')" class="cursor-pointer rounded-2xl p-4 bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-600 text-white border-2 border-cyan-300 neon-glow-blue transition-all duration-200 transform scale-[1.015]">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-extrabold tracking-tight">PEPS</span>
+                  <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg bg-emerald-400 text-emerald-950 shadow-md">FIFO</span>
+                </div>
+                <div class="w-5 h-5 rounded-full bg-white text-blue-700 flex items-center justify-center text-xs font-bold check-icon shadow-md">✓</div>
+              </div>
+              <div class="text-xs font-semibold text-cyan-100 mb-3">Primeras en Entrar, Primeras en Salir</div>
+              <div class="grid grid-cols-2 gap-2 pt-2 text-[11px] font-medium border-t border-white/25">
+                <div class="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm rounded-lg px-2 py-1.5 border border-white/10">
+                  <span>📈</span>
+                  <span class="text-white/80">Utilidad:</span>
+                  <span class="font-extrabold text-emerald-300 drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]">Mayor</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm rounded-lg px-2 py-1.5 border border-white/10">
+                  <span>📦</span>
+                  <span class="text-white/80">Inv. Final:</span>
+                  <span class="font-extrabold text-white">Actualizado</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- UEPS Card -->
+            <div id="btn-method-ueps" onclick="selectMethod('ueps')" class="cursor-pointer rounded-2xl p-4 bg-surface-container/90 hover:bg-surface-container-high text-on-surface-variant border-2 border-purple-500/30 hover:border-purple-400/70 hover:shadow-[0_0_20px_rgba(167,139,250,0.25)] transition-all duration-200">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-extrabold tracking-tight text-white">UEPS</span>
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-400/40">LIFO</span>
+                </div>
+                <div class="w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center text-xs check-icon opacity-0">✓</div>
+              </div>
+              <div class="text-xs font-semibold text-slate-300 mb-3">Últimas en Entrar, Primeras en Salir</div>
+              <div class="grid grid-cols-2 gap-2 pt-2 text-[11px] font-medium border-t border-slate-800">
+                <div class="flex items-center gap-1.5 bg-surface-container-lowest/80 rounded-lg px-2 py-1.5 text-slate-300 border border-slate-800">
+                  <span>📉</span>
+                  <span class="text-slate-400">Impuesto:</span>
+                  <span class="font-bold text-cyan-300">Menor</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-surface-container-lowest/80 rounded-lg px-2 py-1.5 text-slate-300 border border-slate-800">
+                  <span>🎓</span>
+                  <span class="text-slate-400">Ámbito:</span>
+                  <span class="font-bold text-purple-300">Didáctico</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Promedio Ponderado Card -->
+            <div id="btn-method-promedio" onclick="selectMethod('promedio')" class="cursor-pointer rounded-2xl p-4 bg-surface-container/90 hover:bg-surface-container-high text-on-surface-variant border-2 border-emerald-500/30 hover:border-emerald-400/70 hover:shadow-[0_0_20px_rgba(52,211,153,0.25)] transition-all duration-200">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-extrabold tracking-tight text-white">Promedio</span>
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">PP</span>
+                </div>
+                <div class="w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center text-xs check-icon opacity-0">✓</div>
+              </div>
+              <div class="text-xs font-semibold text-slate-300 mb-3">Costo Medio Ponderado Móvil</div>
+              <div class="grid grid-cols-2 gap-2 pt-2 text-[11px] font-medium border-t border-slate-800">
+                <div class="flex items-center gap-1.5 bg-surface-container-lowest/80 rounded-lg px-2 py-1.5 text-slate-300 border border-slate-800">
+                  <span>⚖️</span>
+                  <span class="text-slate-400">Costo:</span>
+                  <span class="font-bold text-emerald-300">Equilibrado</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-surface-container-lowest/80 rounded-lg px-2 py-1.5 text-slate-300 border border-slate-800">
+                  <span>⚡</span>
+                  <span class="text-slate-400">Kardex:</span>
+                  <span class="font-bold text-cyan-300">1 sola capa</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 3. Decision Guide & Summary Action Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- Left: Decision Guide (7 cols) -->
+          <div class="lg:col-span-7 glass-panel rounded-2xl p-6 border border-cyan-500/25 shadow-[0_10px_30px_rgba(0,0,0,0.4)] flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-300">
+                  <span class="material-symbols-outlined text-[20px] align-middle">psychology</span>
+                </div>
+                <h3 class="text-base font-bold text-white tracking-tight">Criterios para el Cuaderno y Exámenes</h3>
+              </div>
+              <span class="text-xs text-slate-400 font-medium">Toca un criterio:</span>
+            </div>
+
+            <!-- Filter Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1" id="criteria-pills">
+              <button id="pill-perecederos" onclick="showTip('perecederos')" type="button" class="px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-[0_0_12px_rgba(56,189,248,0.4)] border border-cyan-300/40">
+                Perecederos 🍎
+              </button>
+              <button id="pill-impuestos" onclick="showTip('impuestos')" type="button" class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all bg-surface-container-high/90 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500">
+                Efecto Fiscal 📉
+              </button>
+              <button id="pill-grano" onclick="showTip('grano')" type="button" class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all bg-surface-container-high/90 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500">
+                Homogéneos ⚖️
+              </button>
+              <button id="pill-parciales" onclick="showTip('parciales')" type="button" class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all bg-surface-container-high/90 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500">
+                Tips de Parcial 🎓
+              </button>
+            </div>
+
+            <!-- Dynamic Hint Box -->
+            <div id="tip-content-box" class="rounded-xl p-4 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-900/90 border border-cyan-500/30 flex items-start gap-3.5 transition-all shadow-inner">
+              <div id="tip-icon" class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/30 border border-cyan-400/40 text-cyan-300 flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">restaurant</span>
+              </div>
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                  <span id="tip-recommended-badge" class="text-xs font-extrabold text-cyan-300 tracking-wide">RECOMENDADO: PEPS</span>
+                  <span id="tip-subtag" class="text-[10px] text-slate-400 font-medium px-2 py-0.5 rounded-md bg-slate-800">Alimentos, medicinas y retail</span>
+                </div>
+                <p id="tip-text" class="text-xs text-slate-200 leading-relaxed font-normal">
+                  En productos con fecha de vencimiento o rotación constante: los primeros lotes que entraron a la bodega son los primeros en salir, protegiendo el inventario final con las compras más frescas.
+                </p>
+              </div>
+            </div>
+
+            <!-- Auto-Load PRD Sample Data Switch -->
+            <div class="flex items-center justify-between p-3.5 rounded-xl bg-surface-container/70 border border-slate-800 hover:border-cyan-500/30 transition-all">
+              <div class="flex items-center gap-2.5">
+                <div class="p-1 rounded-lg bg-emerald-500/20 text-emerald-300">
+                  <span class="material-symbols-outlined text-[18px]">fact_check</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-xs font-bold text-white">Precargar ejercicio oficial del PRD</span>
+                  <span class="text-[11px] text-slate-400">Inv. Inicial 100 u @ $10k, Compra 50 @ $12k, Venta 80, Compra 70 @ $14k, Venta 90</span>
+                </div>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input id="toggle-sample-data" type="checkbox" checked class="sr-only peer"/>
+                <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:rounded-full after:h-4.5 after:w-4.5 after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-emerald-500 peer-checked:to-teal-400 border border-slate-700 peer-checked:border-emerald-400/50 shadow-inner"></div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Right: Live Summary & Action (5 cols) -->
+          <div class="lg:col-span-5 bg-gradient-to-b from-slate-900/90 via-blue-950/40 to-slate-900/95 backdrop-blur-2xl rounded-2xl p-6 border-2 border-cyan-400/40 shadow-[0_15px_40px_rgba(37,99,235,0.25)] flex flex-col justify-between gap-6 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-44 h-44 bg-gradient-to-br from-cyan-400/30 to-purple-600/30 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex flex-col gap-3.5 relative z-10">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                <span class="text-xs font-bold uppercase tracking-wider text-cyan-400">Configuración Activa</span>
+                <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold border border-emerald-400/40 flex items-center gap-1.5 neon-glow-emerald">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Listo
+                </span>
+              </div>
+
+              <!-- Snapshot Table -->
+              <div class="flex flex-col gap-2.5 p-3.5 rounded-xl bg-surface-container-lowest/85 border border-cyan-500/25 shadow-inner">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-400 font-medium">Sistema Elegido:</span>
+                  <span id="summary-system-text" class="font-bold text-cyan-300 flex items-center gap-1.5 drop-shadow-[0_0_6px_rgba(56,189,248,0.4)]">
+                    <span class="material-symbols-outlined text-[15px]">table_chart_view</span> Kardex Permanente
+                  </span>
+                </div>
+                <div class="h-px bg-slate-800"></div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-400 font-medium">Método de Valuación:</span>
+                  <span id="summary-method-text" class="font-bold text-emerald-300 flex items-center gap-1.5 drop-shadow-[0_0_6px_rgba(52,211,153,0.4)]">
+                    <span class="material-symbols-outlined text-[15px]">check_circle</span> PEPS (Primeras en salir)
+                  </span>
+                </div>
+                <div class="h-px bg-slate-800"></div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-400 font-medium">Columnas del Kardex:</span>
+                  <span id="summary-columns-text" class="font-bold text-white font-mono text-[11px]">Entradas • Salidas • Existencias</span>
+                </div>
+              </div>
+
+              <!-- Tip pill -->
+              <div class="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-cyan-950/40 border border-cyan-500/20 text-[11px] text-cyan-200">
+                <span class="material-symbols-outlined text-cyan-400 text-[16px] shrink-0">speed</span>
+                <span>Podrás alternar a UEPS o Promedio en cualquier momento sin perder los datos registrados.</span>
+              </div>
+            </div>
+
+            <!-- CTA Next Step Button -->
+            <div class="flex flex-col gap-2 relative z-10 pt-2">
+              <button id="btn-submit" onclick="handleContinue()" type="button" class="group relative w-full h-[52px] rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(37,99,235,0.45)] hover:shadow-[0_0_35px_rgba(56,189,248,0.6)] active:scale-[0.98] transition-all overflow-hidden border border-cyan-300/50">
+                <span class="relative z-10 tracking-wide font-extrabold text-[15px]">Continuar a Operaciones</span>
+                <span class="material-symbols-outlined text-[20px] relative z-10 group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
+                <div class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </button>
+              <span class="text-[11px] text-slate-400 text-center font-medium">Diseñado para estudiantes • Sin inicios de sesión</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Placeholder Containers for Subsequent Phases -->
+      <section id="section-step-2" class="hidden flex-col gap-6">
+        <div class="glass-panel p-8 rounded-2xl border border-cyan-500/30 text-center flex flex-col items-center gap-3">
+          <span class="material-symbols-outlined text-4xl text-cyan-400 animate-pulse">playlist_add</span>
+          <h2 class="text-xl font-bold text-white">Fase 2: Registro de Operaciones</h2>
+          <p class="text-sm text-slate-300 max-w-md">En esta pantalla ingresarás el Inventario Inicial, Compras y Ventas con validación en vivo para evitar sobreventas.</p>
+          <button onclick="goToStep(1)" class="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-cyan-300 border border-slate-700">← Regresar a Configuración</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- 8 FAQ MODAL (PREGUNTAS FRECUENTES DIDÁCTICAS) -->
+  <div id="faq-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-3xl max-h-[90vh] rounded-2xl border border-purple-500/40 shadow-[0_0_50px_rgba(168,85,247,0.3)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- FAQ Modal Header -->
+      <div class="p-5 border-b border-purple-500/30 flex items-center justify-between bg-purple-950/40">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-400/50 flex items-center justify-center text-purple-300">
+            <span class="material-symbols-outlined text-[24px]">school</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white tracking-tight">8 Preguntas Frecuentes para tu Taller</h3>
+            <p class="text-xs text-purple-200/80">Conceptos clave explicados con sencillez para estudiantes de primeros semestres</p>
+          </div>
+        </div>
+        <button onclick="closeFaqModal()" class="w-8 h-8 rounded-lg bg-surface-container-high hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-slate-700 flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <!-- FAQ Modal Body (Scrollable Accordions) -->
+      <div class="p-5 overflow-y-auto space-y-3" id="faq-accordion-list">
+        
+        <!-- FAQ 1 -->
+        <div class="rounded-xl border border-slate-700/80 bg-surface-container-low overflow-hidden">
+          <button onclick="toggleFaq(1)" class="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-surface-container-high/60 transition-colors">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">1</span>
+              <span class="text-sm font-bold text-white">¿Qué es el Kardex y para qué sirve?</span>
+            </div>
+            <span id="faq-chevron-1" class="material-symbols-outlined text-slate-400 text-[20px] transition-transform">expand_more</span>
+          </button>
+          <div id="faq-ans-1" class="hidden px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+            El <strong>Kardex</strong> es una tarjeta o registro contable donde se anota cada movimiento de mercancía: cuántas unidades entran, a qué precio se compraron, cuántas salen vendidas y cuántas quedan en bodega. Su objetivo principal es saber en todo momento el <em>Costo de Ventas</em> y el valor monetario del inventario final sin tener que contar físicamente la bodega todos los días.
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="rounded-xl border border-slate-700/80 bg-surface-container-low overflow-hidden">
+          <button onclick="toggleFaq(2)" class="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-surface-container-high/60 transition-colors">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">2</span>
+              <span class="text-sm font-bold text-white">¿Cuál es la diferencia entre Sistema Permanente y Periódico?</span>
+            </div>
+            <span id="faq-chevron-2" class="material-symbols-outlined text-slate-400 text-[20px] transition-transform">expand_more</span>
+          </button>
+          <div id="faq-ans-2" class="hidden px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+            En el <strong>Sistema Permanente (Kardex)</strong> se actualiza el saldo y se calcula el costo de venta inmediatamente después de cada venta individual. En cambio, en el <strong>Sistema Periódico</strong> no hay kardex continuo: la empresa solo conoce el costo de ventas al final del mes o año mediante un conteo físico y la fórmula contable: <code class="text-emerald-300 font-mono bg-slate-900 px-1 py-0.5 rounded">Costo = Inv. Inicial + Compras - Inv. Final</code>.
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="rounded-xl border border-slate-700/80 bg-surface-container-low overflow-hidden">
+          <button onclick="toggleFaq(3)" class="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-surface-container-high/60 transition-colors">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold border border-blue-500/30">3</span>
+              <span class="text-sm font-bold text-white">¿Cómo funciona el método PEPS (FIFO)?</span>
+            </div>
+            <span id="faq-chevron-3" class="material-symbols-outlined text-slate-400 text-[20px] transition-transform">expand_more</span>
+          </button>
+          <div id="faq-ans-3" class="hidden px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+            <strong>PEPS</strong> significa <em>Primeras en Entrar, Primeras en Salir</em> (en inglés FIFO: First In, First Out). Cada vez que vendes unidades, sacas primero las que compraste hace más tiempo (el lote más antiguo). Si ese lote no alcanza para cubrir la venta, tomas del lote siguiente en orden cronológico.
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="rounded-xl border border-slate-700/80 bg-surface-container-low overflow-hidden">
+          <button onclick="toggleFaq(4)" class="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-surface-container-high/60 transition-colors">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30">4</span>
+              <span class="text-sm font-bold text-white">¿Cómo funciona el método UEPS (LIFO)?</span>
+            </div>
+            <span id="faq-chevron-4" class="material-symbols-outlined text-slate-400 text-[20px] transition-transform">expand_more</span>
+          </button>
+          <div id="faq-ans-4" class="hidden px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+            <strong>UEPS</strong> significa <em>Últimas en Entrar, Primeras en Salir</em> (en inglés LIFO: Last In, First Out). Las unidades vendidas se valoran con el costo de la compra más reciente. Es como una pila de platos: retiras primero los que acabas de colocar arriba.
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="rounded-xl border border-slate-700/80 bg-surface-container-low overflow-hidden">
+          <button onclick="toggleFaq(5)" class="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-surface-container-high/60 transition-colors">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">5</span>
+              <span class="text-sm font-bold text-white">¿Cómo se calcula el Promedio Ponderado?</span>
+            </div>
+            <span id="faq-chevron-5" class="material-symbols-outlined text-slate-400 text-[20px] transition-transform">expand_more</span>
+          </button>
+          <div id="faq-ans-5" class="hidden px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+            No separa lotes ni capas. Cada vez que compras mercancía a un precio nuevo, recalculas el costo unitario con la fórmula:
+            <div class="my-2 p-2 bg-slate-900 rounded font-mono text-emerald-300 text-center">
+              Nuevo Costo Unitario = (Costo Total Anterior + Costo Compra) / (Unidades Anteriores + Unidades Compradas)
+            </div>
+            Todas las ventas posteriores salen a ese costo promedio hasta que llegue otra compra.
+          </div>
+        </div>
+
+        <!-- FAQ 6 -->
+        <div class="rounded-xl border border-slate-700/80 bg-surface-container-low overflow-hidden">
+          <button onclick="toggleFaq(6)" class="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-surface-container-high/60 transition-colors">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">6</span>
+              <span class="text-sm font-bold text-white">¿Por qué en inflación PEPS da mayor utilidad contable?</span>
+            </div>
+            <span id="faq-chevron-6" class="material-symbols-outlined text-slate-400 text-[20px] transition-transform">expand_more</span>
+          </button>
+          <div id="faq-ans-6" class="hidden px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+            Si hay inflación, los precios de compra suben constantemente. Como PEPS descarga los lotes más viejos (que eran más baratos), el <strong>Costo de Ventas es menor</strong>. Al restar un costo menor a las ventas, la <strong>Utilidad Bruta resultante es más alta</strong> (y por ende se pagan más impuestos sobre la renta).
+          </div>
+        </div>
+
+        <!-- FAQ 7 -->
+        <div class="rounded-xl border border-slate-700/80 bg-surface-container-low overflow-hidden">
+          <button onclick="toggleFaq(7)" class="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-surface-container-high/60 transition-colors">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold border border-rose-500/30">7</span>
+              <span class="text-sm font-bold text-white">¿Qué pasa si intento vender más unidades de las disponibles?</span>
+            </div>
+            <span id="faq-chevron-7" class="material-symbols-outlined text-slate-400 text-[20px] transition-transform">expand_more</span>
+          </button>
+          <div id="faq-ans-7" class="hidden px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+            En la realidad contable y física no existen existencias negativas. Si intentas registrar una venta mayor a las unidades en existencia en esa fecha, ContaPaso emitirá una <strong>alerta de advertencia</strong> para corregir el dato en tu taller antes de continuar.
+          </div>
+        </div>
+
+        <!-- FAQ 8 -->
+        <div class="rounded-xl border border-slate-700/80 bg-surface-container-low overflow-hidden">
+          <button onclick="toggleFaq(8)" class="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-surface-container-high/60 transition-colors">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">8</span>
+              <span class="text-sm font-bold text-white">¿Por qué las normas NIIF (NIC 2) prohíben el método UEPS?</span>
+            </div>
+            <span id="faq-chevron-8" class="material-symbols-outlined text-slate-400 text-[20px] transition-transform">expand_more</span>
+          </button>
+          <div id="faq-ans-8" class="hidden px-4 pb-4 text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
+            Bajo las Normas Internacionales de Información Financiera (NIIF / NIC 2), el método UEPS está prohibido porque deja el inventario final valorado con precios muy antiguos y desactualizados, lo cual distorsiona la realidad patrimonial en el balance general. Sin embargo, en la universidad se sigue enseñando para entender la teoría y la lógica de flujo de costos.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FAQ Modal Footer -->
+      <div class="p-4 border-t border-purple-500/30 flex justify-end bg-surface-container-low">
+        <button onclick="closeFaqModal()" class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition-colors shadow-md">
+          Entendido, cerrar guía
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FORMULAS MODAL -->
+  <div id="formulas-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-xl rounded-2xl border border-cyan-500/40 p-6 shadow-[0_0_50px_rgba(56,189,248,0.25)] flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-cyan-500/30 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-300 text-[22px]">lightbulb</span>
+          <h3 class="text-base font-bold text-white">Fórmulas Contables Directas</h3>
+        </div>
+        <button onclick="closeFormulasModal()" class="text-slate-400 hover:text-white">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
+          <div class="font-bold text-cyan-300 mb-1">Costo de Ventas (Sistema Periódico):</div>
+          <div class="font-mono text-emerald-300 bg-black/40 p-2 rounded">Costo de Ventas = Inv. Inicial + Compras Netas - Inv. Final</div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
+          <div class="font-bold text-cyan-300 mb-1">Promedio Ponderado Móvil (Kardex):</div>
+          <div class="font-mono text-emerald-300 bg-black/40 p-2 rounded">Costo Unitario = (Saldo Valor Total + Compra Valor Total) / (Saldo Cantidad + Compra Cantidad)</div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
+          <div class="font-bold text-cyan-300 mb-1">Utilidad Bruta en Ventas:</div>
+          <div class="font-mono text-emerald-300 bg-black/40 p-2 rounded">Utilidad Bruta = Ingresos por Ventas - Costo de Ventas</div>
+        </div>
+      </div>
+      <div class="flex justify-end pt-2">
+        <button onclick="closeFormulasModal()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full bg-[#05070e]/90 border-t border-cyan-500/20 py-4 relative z-10 backdrop-blur-md">
+    <div class="w-full max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3">
+      <p class="text-xs text-slate-400 text-center md:text-left">
+        ContaPaso • Entorno didáctico para resolución de talleres de inventarios y Kardex.
+      </p>
+      <div class="flex items-center gap-3 text-xs text-slate-400 font-medium">
+        <span class="text-cyan-400/90 font-semibold">PEPS · UEPS · Promedio Ponderado</span>
+        <span>•</span>
+        <button onclick="openFaqModal()" class="text-purple-300 hover:underline">8 Preguntas Frecuentes</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script>
+    // Application State
+    const AppState = {
+      system: 'permanente',     // 'permanente' | 'periodico'
+      method: 'peps',           // 'peps' | 'ueps' | 'promedio'
+      isInflation: true,
+      useSampleData: true,
+      currentStep: 1
+    };
+
+    const tipData = {
+      perecederos: {
+        rec: "RECOMENDADO: PEPS",
+        sub: "Alimentos, medicinas y retail",
+        text: "En productos con fecha de vencimiento o rotación constante: los primeros lotes que entraron a la bodega son los primeros en salir, protegiendo el inventario final con las compras más frescas.",
+        icon: "restaurant"
+      },
+      impuestos: {
+        rec: "EFECTO FISCAL: UEPS",
+        sub: "Cálculo en escenarios inflacionarios",
+        text: "Al descargar las compras más recientes y costosas primero, el Costo de Ventas (CV) es más alto, lo cual reduce la utilidad contable y el impuesto a pagar.",
+        icon: "trending_down"
+      },
+      grano: {
+        rec: "IDEAL: PROMEDIO PONDERADO",
+        sub: "Combustibles, químicos y commodities",
+        text: "Para mercancías donde es imposible o innecesario rastrear qué saco o litro específico se vendió. Todo se mezcla en un costo unitario ponderado continuo.",
+        icon: "balance"
+      },
+      parciales: {
+        rec: "TIPS PARA EL EXAMEN",
+        sub: "Reglas clave para talleres",
+        text: "Si el examen no aclara el método y hay precios en aumento: PEPS da la mayor utilidad y mayor inventario final; UEPS da el mayor costo de venta y menor utilidad; Promedio da un resultado intermedio.",
+        icon: "school"
+      }
+    };
+
+    function selectSystem(system) {
+      AppState.system = system;
+      const cardPerm = document.getElementById('card-permanente');
+      const cardPeri = document.getElementById('card-periodico');
+      const checkPerm = document.getElementById('check-permanente');
+      const checkPeri = document.getElementById('check-periodico');
+
+      if (system === 'permanente') {
+        cardPerm.className = "group relative rounded-2xl p-6 flex flex-col justify-between cursor-pointer transition-all duration-300 glass-panel border-2 border-cyan-400 neon-glow-blue hover:shadow-[0_0_35px_rgba(56,189,248,0.45)]";
+        cardPeri.className = "group relative rounded-2xl p-6 flex flex-col justify-between cursor-pointer transition-all duration-300 glass-panel hover:bg-surface-container-high/80 border-2 border-slate-700/60 hover:border-slate-500 shadow-lg";
+
+        checkPerm.className = "w-6 h-6 rounded-full border-2 border-cyan-300 bg-gradient-to-tr from-blue-600 to-cyan-400 text-white flex items-center justify-center transition-all shadow-[0_0_10px_#38bdf8]";
+        checkPerm.innerHTML = '<span class="material-symbols-outlined text-[15px] font-bold">check</span>';
+
+        checkPeri.className = "w-6 h-6 rounded-full border-2 border-slate-600 bg-transparent flex items-center justify-center transition-all";
+        checkPeri.innerHTML = '<span class="material-symbols-outlined text-[15px] font-bold hidden">check</span>';
+      } else {
+        cardPeri.className = "group relative rounded-2xl p-6 flex flex-col justify-between cursor-pointer transition-all duration-300 glass-panel border-2 border-emerald-400 neon-glow-emerald hover:shadow-[0_0_35px_rgba(52,211,153,0.45)]";
+        cardPerm.className = "group relative rounded-2xl p-6 flex flex-col justify-between cursor-pointer transition-all duration-300 glass-panel hover:bg-surface-container-high/80 border-2 border-slate-700/60 hover:border-slate-500 shadow-lg";
+
+        checkPeri.className = "w-6 h-6 rounded-full border-2 border-emerald-300 bg-gradient-to-tr from-emerald-600 to-teal-400 text-white flex items-center justify-center transition-all shadow-[0_0_10px_#34d399]";
+        checkPeri.innerHTML = '<span class="material-symbols-outlined text-[15px] font-bold">check</span>';
+
+        checkPerm.className = "w-6 h-6 rounded-full border-2 border-slate-600 bg-transparent flex items-center justify-center transition-all";
+        checkPerm.innerHTML = '<span class="material-symbols-outlined text-[15px] font-bold hidden">check</span>';
+      }
+
+      updateSummary();
+    }
+
+    function selectMethod(method) {
+      AppState.method = method;
+      const methods = ['peps', 'ueps', 'promedio'];
+
+      methods.forEach(m => {
+        const card = document.getElementById(`btn-method-${m}`);
+        const check = card.querySelector('.check-icon');
+
+        if (m === method) {
+          if (m === 'peps') {
+            card.className = "cursor-pointer rounded-2xl p-4 bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-600 text-white border-2 border-cyan-300 neon-glow-blue transition-all duration-200 transform scale-[1.015]";
+          } else if (m === 'ueps') {
+            card.className = "cursor-pointer rounded-2xl p-4 bg-gradient-to-br from-purple-700 via-indigo-700 to-fuchsia-600 text-white border-2 border-purple-300 shadow-[0_0_25px_rgba(167,139,250,0.4)] transition-all duration-200 transform scale-[1.015]";
+          } else {
+            card.className = "cursor-pointer rounded-2xl p-4 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 text-white border-2 border-emerald-300 neon-glow-emerald transition-all duration-200 transform scale-[1.015]";
+          }
+          if (check) {
+            check.className = "w-5 h-5 rounded-full bg-white text-slate-900 flex items-center justify-center text-xs font-bold check-icon shadow opacity-100";
+            check.innerText = "✓";
+          }
+        } else {
+          card.className = "cursor-pointer rounded-2xl p-4 bg-surface-container/90 hover:bg-surface-container-high text-on-surface-variant border-2 border-slate-700/60 hover:border-slate-500 transition-all duration-200";
+          if (check) {
+            check.className = "w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center text-xs check-icon opacity-0";
+          }
+        }
+      });
+
+      updateSummary();
+    }
+
+    function showTip(key) {
+      const data = tipData[key];
+      if (!data) return;
+
+      ['perecederos', 'impuestos', 'grano', 'parciales'].forEach(p => {
+        const pill = document.getElementById(`pill-${p}`);
+        if (p === key) {
+          pill.className = "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-[0_0_12px_rgba(56,189,248,0.4)] border border-cyan-300/40";
+        } else {
+          pill.className = "px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all bg-surface-container-high/90 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500";
+        }
+      });
+
+      document.getElementById('tip-recommended-badge').innerText = data.rec;
+      document.getElementById('tip-subtag').innerText = data.sub;
+      document.getElementById('tip-text').innerText = data.text;
+      document.getElementById('tip-icon').innerHTML = `<span class="material-symbols-outlined text-[20px]">${data.icon}</span>`;
+    }
+
+    function toggleScenario() {
+      AppState.isInflation = !AppState.isInflation;
+      const pill = document.getElementById('scenario-pill');
+      if (AppState.isInflation) {
+        pill.innerHTML = '<span class="material-symbols-outlined text-[15px] text-emerald-400">trending_up</span> Inflación (Precios al alza)';
+        pill.className = "font-bold text-emerald-300 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]";
+      } else {
+        pill.innerHTML = '<span class="material-symbols-outlined text-[15px] text-purple-400">trending_flat</span> Precios estables';
+        pill.className = "font-bold text-purple-300 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(167,139,250,0.4)]";
+      }
+    }
+
+    function applyPreset(preset) {
+      if (preset === 'prd') {
+        selectSystem('permanente');
+        selectMethod('peps');
+        showTip('parciales');
+      } else if (preset === 'retail') {
+        selectSystem('permanente');
+        selectMethod('promedio');
+        showTip('perecederos');
+      }
+    }
+
+    function updateSummary() {
+      const sysEl = document.getElementById('summary-system-text');
+      const methEl = document.getElementById('summary-method-text');
+      const colEl = document.getElementById('summary-columns-text');
+
+      if (AppState.system === 'permanente') {
+        sysEl.innerHTML = '<span class="material-symbols-outlined text-[15px] text-cyan-300">table_chart_view</span> Kardex Permanente';
+        colEl.innerText = "Entradas • Salidas • Existencias";
+      } else {
+        sysEl.innerHTML = '<span class="material-symbols-outlined text-[15px] text-emerald-300">inventory_2</span> Inventario Periódico';
+        colEl.innerText = "Inv. Inicial • Compras • Físico Final";
+      }
+
+      const methodNames = {
+        peps: 'PEPS (Primeras en salir)',
+        ueps: 'UEPS (Últimas en salir)',
+        promedio: 'Promedio Ponderado'
+      };
+
+      methEl.innerHTML = `<span class="material-symbols-outlined text-[15px] text-emerald-300">check_circle</span> ${methodNames[AppState.method]}`;
+    }
+
+    function goToStep(step) {
+      AppState.currentStep = step;
+      if (step === 1) {
+        document.getElementById('section-step-1').classList.remove('hidden');
+        document.getElementById('section-step-2').classList.add('hidden');
+      } else if (step === 2) {
+        document.getElementById('section-step-1').classList.add('hidden');
+        document.getElementById('section-step-2').classList.remove('hidden');
+      }
+    }
+
+    function handleContinue() {
+      const btn = document.getElementById('btn-submit');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Guardando configuración...</span>';
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        goToStep(2);
+      }, 350);
+    }
+
+    // FAQ Modal Controllers
+    function openFaqModal() {
+      document.getElementById('faq-modal').classList.remove('hidden');
+    }
+
+    function closeFaqModal() {
+      document.getElementById('faq-modal').classList.add('hidden');
+    }
+
+    function toggleFaq(num) {
+      const ans = document.getElementById(`faq-ans-${num}`);
+      const chevron = document.getElementById(`faq-chevron-${num}`);
+      if (ans.classList.contains('hidden')) {
+        ans.classList.remove('hidden');
+        chevron.style.transform = 'rotate(180deg)';
+      } else {
+        ans.classList.add('hidden');
+        chevron.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    // Formulas Modal Controllers
+    function openFormulasModal() {
+      document.getElementById('formulas-modal').classList.remove('hidden');
+    }
+
+    function closeFormulasModal() {
+      document.getElementById('formulas-modal').classList.add('hidden');
+    }
+
+    // Close Modals on ESC
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeFaqModal();
+        closeFormulasModal();
+      }
+    });
+
+    // Close on backdrop click
+    document.getElementById('faq-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'faq-modal') closeFaqModal();
+    });
+    document.getElementById('formulas-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'formulas-modal') closeFormulasModal();
+    });
+  </script>
+</body>
+</html>
