@@ -43,6 +43,11 @@
     .neon-glow-purple {
       box-shadow: 0 0 25px -4px rgba(168, 85, 247, 0.35);
     }
+    @media print {
+      header, footer, nav, button, .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .glass-panel, .glass-card { background: white !important; color: black !important; border: 1px solid #ccc !important; }
+    }
   </style>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script>
@@ -93,7 +98,7 @@
     <div class="h-20 w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
       
       <!-- Brand Logo -->
-      <div class="flex items-center gap-3 shrink-0">
+      <div class="flex items-center gap-3 shrink-0 cursor-pointer" onclick="goToStep(1)">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-600 to-indigo-600 p-0.5 shadow-md shadow-cyan-500/20 flex items-center justify-center">
           <div class="w-full h-full bg-[#070a13] rounded-[10px] flex items-center justify-center">
             <span class="material-symbols-outlined text-[22px] text-cyan-400">table_chart_view</span>
@@ -122,18 +127,23 @@
       </nav>
 
       <!-- Right Header Tools -->
-      <div class="flex items-center gap-2.5 shrink-0">
+      <div class="flex items-center gap-2 shrink-0">
+        <!-- Banco de Ejercicios -->
+        <button onclick="openExerciseBankModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-200 text-xs font-bold border border-cyan-400/40 transition-all shadow-sm active:scale-95" title="Explorar banco de ejercicios de prueba">
+          <span class="material-symbols-outlined text-[17px] text-cyan-300">folder_open</span>
+          <span class="hidden md:inline">Banco Talleres</span>
+        </button>
+
         <!-- 8 FAQs Button -->
         <button onclick="openFaqModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/60 text-purple-200 text-xs font-bold border border-purple-400/40 transition-all shadow-sm active:scale-95" title="Ver 8 preguntas frecuentes para entender el taller">
           <span class="material-symbols-outlined text-[17px] text-purple-300">quiz</span>
-          <span class="hidden sm:inline">8 Preguntas Frecuentes</span>
-          <span class="sm:hidden font-mono">FAQ</span>
+          <span class="hidden sm:inline">8 FAQs</span>
         </button>
 
         <!-- Direct Formulas Button -->
         <button onclick="openFormulasModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-high/80 hover:bg-surface-bright/90 text-on-surface text-xs font-semibold border border-blue-500/30 hover:border-cyan-400/50 transition-all shadow-sm active:scale-95" title="Ver fórmulas matemáticas directas">
           <span class="material-symbols-outlined text-[17px] text-amber-300">lightbulb</span>
-          <span class="hidden md:inline">Fórmulas</span>
+          <span class="hidden xl:inline">Fórmulas</span>
         </button>
 
         <!-- Active Status Badge -->
@@ -150,7 +160,9 @@
   <main class="w-full pt-24 pb-16 bg-transparent min-h-screen relative z-10">
     <div class="w-full max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
 
-      <!-- STEP 1: CONFIGURAR TALLER -->
+      <!-- ========================================== -->
+      <!-- PASO 1: CONFIGURAR TALLER                  -->
+      <!-- ========================================== -->
       <section id="section-step-1" class="flex flex-col gap-6">
 
         <!-- Top Step Ribbon & Quick Presets -->
@@ -481,10 +493,9 @@
                   <span class="text-[11px] text-slate-400">Inv. Inicial 100 u @ $10k, Compra 50 @ $12k, Venta 80, Compra 70 @ $14k, Venta 90</span>
                 </div>
               </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input id="toggle-sample-data" type="checkbox" checked class="sr-only peer"/>
-                <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:rounded-full after:h-4.5 after:w-4.5 after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-emerald-500 peer-checked:to-teal-400 border border-slate-700 peer-checked:border-emerald-400/50 shadow-inner"></div>
-              </label>
+              <button onclick="loadPRDExample(); goToStep(2);" class="px-3 py-1.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-400/40 text-xs font-bold transition-all">
+                Cargar e ir a Paso 2
+              </button>
             </div>
           </div>
 
@@ -531,7 +542,7 @@
 
             <!-- CTA Next Step Button -->
             <div class="flex flex-col gap-2 relative z-10 pt-2">
-              <button id="btn-submit" onclick="handleContinue()" type="button" class="group relative w-full h-[52px] rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(37,99,235,0.45)] hover:shadow-[0_0_35px_rgba(56,189,248,0.6)] active:scale-[0.98] transition-all overflow-hidden border border-cyan-300/50">
+              <button onclick="goToStep(2)" type="button" class="group relative w-full h-[52px] rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(37,99,235,0.45)] hover:shadow-[0_0_35px_rgba(56,189,248,0.6)] active:scale-[0.98] transition-all overflow-hidden border border-cyan-300/50">
                 <span class="relative z-10 tracking-wide font-extrabold text-[15px]">Continuar a Operaciones</span>
                 <span class="material-symbols-outlined text-[20px] relative z-10 group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
                 <div class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -545,24 +556,459 @@
 
       </section>
 
-      <!-- Placeholder Containers for Subsequent Phases -->
+      <!-- ========================================== -->
+      <!-- PASO 2: INGRESO Y VALIDACIÓN OPERACIONES   -->
+      <!-- ========================================== -->
       <section id="section-step-2" class="hidden flex-col gap-6">
-        <div class="glass-panel p-8 rounded-2xl border border-cyan-500/30 text-center flex flex-col items-center gap-3">
-          <span class="material-symbols-outlined text-4xl text-cyan-400 animate-pulse">playlist_add</span>
-          <h2 class="text-xl font-bold text-white">Fase 2: Registro de Operaciones</h2>
-          <p class="text-sm text-slate-300 max-w-md">En esta pantalla ingresarás el Inventario Inicial, Compras y Ventas con validación en vivo para evitar sobreventas.</p>
-          <button onclick="goToStep(1)" class="mt-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-cyan-300 border border-slate-700">← Regresar a Configuración</button>
+
+        <!-- Top Operations Ribbon -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 glass-panel px-5 py-3 rounded-2xl border border-cyan-500/25 shadow-[0_10px_35px_rgba(0,0,0,0.45)]">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-gradient-to-r from-blue-600/30 to-cyan-500/30 border border-cyan-400/50 text-cyan-300 font-mono text-[11px] uppercase tracking-wider font-extrabold shadow-sm">
+              Paso 2 de 4
+            </span>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="font-bold tracking-tight text-white">Registro de Movimientos</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-400/30 font-semibold">
+                Control de Entradas y Salidas
+              </span>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="loadPRDExample()" type="button" class="px-3 py-1.5 rounded-xl bg-surface-container-high/90 hover:bg-cyan-600/30 text-cyan-300 text-xs font-bold border border-cyan-500/30 transition-all flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px]">restore</span> Restaurar caso PRD
+            </button>
+            <button onclick="clearOperations()" type="button" class="px-3 py-1.5 rounded-xl bg-surface-container-high/90 hover:bg-rose-600/30 text-rose-300 text-xs font-bold border border-rose-500/30 transition-all flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px]">delete_sweep</span> Vaciar
+            </button>
+          </div>
         </div>
+
+        <!-- Real-Time Stock Warning Banner -->
+        <div id="stock-warning-banner" class="hidden rounded-2xl p-4 bg-gradient-to-r from-rose-950/80 to-amber-950/80 border-2 border-rose-500/60 shadow-[0_0_30px_rgba(244,63,94,0.3)] animate-bounce flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-400/40 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[24px]">warning</span>
+          </div>
+          <div class="flex flex-col gap-1">
+            <h4 class="text-sm font-bold text-white tracking-tight flex items-center gap-2">
+              <span>¡Atención! Error de sobreventa detectado</span>
+              <span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/30 text-rose-200 border border-rose-400/40 uppercase font-mono">Stock Insuficiente</span>
+            </h4>
+            <p id="stock-warning-text" class="text-xs text-rose-100 leading-relaxed font-mono"></p>
+            <span class="text-[11px] text-amber-200 mt-0.5">En el Kardex no pueden existir existencias negativas. Ajusta la cantidad de la venta para poder continuar.</span>
+          </div>
+        </div>
+
+        <!-- Operations Summary KPI Strip -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-slate-800 flex flex-col gap-0.5">
+            <span class="text-[11px] text-slate-400 font-medium">Total Unidades Entradas</span>
+            <span id="ops-total-entradas" class="text-lg font-mono font-bold text-emerald-300">0</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-slate-800 flex flex-col gap-0.5">
+            <span class="text-[11px] text-slate-400 font-medium">Total Unidades Vendidas</span>
+            <span id="ops-total-salidas" class="text-lg font-mono font-bold text-rose-300">0</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-slate-800 flex flex-col gap-0.5">
+            <span class="text-[11px] text-slate-400 font-medium">Saldo Físico Resultante</span>
+            <span id="ops-total-saldo" class="text-lg font-mono font-bold text-cyan-300">0</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-slate-800 flex flex-col gap-0.5">
+            <span class="text-[11px] text-slate-400 font-medium">Inversión en Compras</span>
+            <span id="ops-total-valor-compras" class="text-lg font-mono font-bold text-white">$ 0</span>
+          </div>
+        </div>
+
+        <!-- Operations Interactive Table Card -->
+        <div class="glass-panel rounded-2xl border border-cyan-500/25 shadow-xl overflow-hidden flex flex-col">
+          <div class="p-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-container-low/60">
+            <div>
+              <h3 class="text-base font-bold text-white">Cronograma de Operaciones del Taller</h3>
+              <p class="text-xs text-slate-400">Registra el inventario inicial, compras y ventas en orden secuencial.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="addOperation('compra')" class="px-3.5 py-1.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 text-xs font-bold border border-emerald-400/40 flex items-center gap-1 transition-all shadow-sm active:scale-95">
+                <span class="material-symbols-outlined text-[16px]">add</span> + Agregar Compra
+              </button>
+              <button onclick="addOperation('venta')" class="px-3.5 py-1.5 rounded-xl bg-rose-600/30 hover:bg-rose-600/50 text-rose-300 text-xs font-bold border border-rose-400/40 flex items-center gap-1 transition-all shadow-sm active:scale-95">
+                <span class="material-symbols-outlined text-[16px]">remove</span> + Agregar Venta
+              </button>
+            </div>
+          </div>
+
+          <!-- Table Container -->
+          <div class="overflow-x-auto w-full">
+            <table class="w-full text-left border-collapse min-w-[700px]">
+              <thead>
+                <tr class="bg-surface-container-lowest/80 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                  <th class="p-3 text-center w-12">#</th>
+                  <th class="p-3 w-32">Tipo Operación</th>
+                  <th class="p-3 w-28">Fecha</th>
+                  <th class="p-3">Detalle / Factura</th>
+                  <th class="p-3 text-right w-32">Cantidad (u)</th>
+                  <th class="p-3 text-right w-36">Costo Unitario</th>
+                  <th class="p-3 text-right w-36">Subtotal</th>
+                  <th class="p-3 text-center w-12">Quitar</th>
+                </tr>
+              </thead>
+              <tbody id="operations-tbody">
+                <!-- Filas renderizadas dinámicamente por app.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Table Bottom Bar -->
+          <div class="p-4 border-t border-slate-800/80 bg-surface-container-low/40 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <button onclick="goToStep(1)" class="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">arrow_back</span> Regresar a Configuración
+            </button>
+            <button id="btn-continue-to-kardex" onclick="goToStep(3)" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white text-xs font-extrabold shadow-[0_0_20px_rgba(37,99,235,0.4)] flex items-center gap-2 transition-all active:scale-95">
+              <span>Calcular y Ver Kardex Paso a Paso</span>
+              <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PASO 3: KARDEX PASO A PASO                 -->
+      <!-- ========================================== -->
+      <section id="section-step-3" class="hidden flex-col gap-6">
+
+        <!-- Top Results Ribbon & Quick Method Toggle -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 glass-panel px-5 py-3 rounded-2xl border border-cyan-500/25 shadow-[0_10px_35px_rgba(0,0,0,0.45)]">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-gradient-to-r from-blue-600/30 to-cyan-500/30 border border-cyan-400/50 text-cyan-300 font-mono text-[11px] uppercase tracking-wider font-extrabold shadow-sm">
+              Paso 3 de 4
+            </span>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="font-bold tracking-tight text-white">Resolución del Kardex</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-400/30 font-semibold">
+                Desglose Lote a Lote
+              </span>
+            </div>
+          </div>
+
+          <!-- Method Switcher Pills (Without Reloading) -->
+          <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-2xl border border-slate-700">
+            <span class="text-xs text-slate-400 px-2 font-medium">Método:</span>
+            <button id="kardex-tab-peps" onclick="switchKardexMethod('peps')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all">PEPS (FIFO)</button>
+            <button id="kardex-tab-ueps" onclick="switchKardexMethod('ueps')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all">UEPS (LIFO)</button>
+            <button id="kardex-tab-promedio" onclick="switchKardexMethod('promedio')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all">Promedio</button>
+          </div>
+        </div>
+
+        <!-- Big KPI Metric Cards Strip -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Costo de Ventas -->
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-rose-950/40 via-surface-container-low to-slate-900 border-2 border-rose-500/40 shadow-lg flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs text-rose-300 font-bold uppercase tracking-wider">
+              <span>Costo de Ventas Total</span>
+              <span class="material-symbols-outlined text-[18px]">shopping_cart_checkout</span>
+            </div>
+            <div id="kpi-costo-ventas" class="text-2xl sm:text-3xl font-mono font-extrabold text-white my-2">$ 0</div>
+            <span class="text-[11px] text-slate-400">Total descargado en salidas</span>
+          </div>
+
+          <!-- Inventario Final -->
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-cyan-950/40 via-surface-container-low to-slate-900 border-2 border-cyan-500/40 shadow-lg flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs text-cyan-300 font-bold uppercase tracking-wider">
+              <span>Inventario Final ($)</span>
+              <span class="material-symbols-outlined text-[18px]">inventory</span>
+            </div>
+            <div id="kpi-inventario-final" class="text-2xl sm:text-3xl font-mono font-extrabold text-cyan-300 my-2">$ 0</div>
+            <span class="text-[11px] text-slate-400">Valor monetario en bodega al cierre</span>
+          </div>
+
+          <!-- Unidades Finales -->
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-surface-container-low to-slate-900 border-2 border-emerald-500/40 shadow-lg flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs text-emerald-300 font-bold uppercase tracking-wider">
+              <span>Unidades en Existencia</span>
+              <span class="material-symbols-outlined text-[18px]">widgets</span>
+            </div>
+            <div id="kpi-unidades-finales" class="text-2xl sm:text-3xl font-mono font-extrabold text-emerald-300 my-2">0 u</div>
+            <span class="text-[11px] text-slate-400">Conteo físico remanente</span>
+          </div>
+
+          <!-- Mercancía Disponible Total -->
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-950/40 via-surface-container-low to-slate-900 border-2 border-purple-500/40 shadow-lg flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs text-purple-300 font-bold uppercase tracking-wider">
+              <span>Mercancía Disponible</span>
+              <span class="material-symbols-outlined text-[18px]">balance</span>
+            </div>
+            <div id="kpi-mercancia-disponible" class="text-2xl sm:text-3xl font-mono font-extrabold text-purple-300 my-2">$ 0</div>
+            <span class="text-[11px] text-slate-400">Costo de Ventas + Inv. Final</span>
+          </div>
+        </div>
+
+        <!-- KARDEX PERMANENTE CONTAINER -->
+        <div id="kardex-permanente-container" class="flex flex-col gap-6">
+
+          <!-- Multi-Column Official Kardex Table -->
+          <div class="glass-panel rounded-2xl border border-cyan-500/25 shadow-xl overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-slate-800 bg-surface-container-low/60 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-cyan-400">grid_on</span>
+                <h3 class="text-base font-bold text-white">Tarjeta de Control Kardex (Estándar Universitario)</h3>
+              </div>
+              <span class="text-xs font-mono text-cyan-300">Moneda: COP ($)</span>
+            </div>
+
+            <div class="overflow-x-auto w-full">
+              <table class="w-full text-left border-collapse min-w-[900px]">
+                <thead>
+                  <!-- Header Level 1: Categories -->
+                  <tr class="bg-surface-container-lowest text-xs font-bold border-b border-slate-800">
+                    <th colspan="2" class="p-2.5 text-center text-slate-400 uppercase tracking-wider border-r border-slate-800">Operación</th>
+                    <th colspan="3" class="p-2.5 text-center text-emerald-400 uppercase tracking-wider border-r border-slate-800 bg-emerald-950/20">ENTRADAS (COMPRAS)</th>
+                    <th colspan="3" class="p-2.5 text-center text-rose-400 uppercase tracking-wider border-r border-slate-800 bg-rose-950/20">SALIDAS (VENTAS AL COSTO)</th>
+                    <th colspan="2" class="p-2.5 text-center text-cyan-300 uppercase tracking-wider bg-cyan-950/20">SALDO EN EXISTENCIA</th>
+                  </tr>
+                  <!-- Header Level 2: Subcolumns -->
+                  <tr class="bg-surface-container-lowest/80 text-[11px] font-mono text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                    <th class="p-2.5 text-center w-20">Fecha</th>
+                    <th class="p-2.5 w-48 border-r border-slate-800">Detalle</th>
+                    <!-- Entradas -->
+                    <th class="p-2.5 text-right w-24">Cant</th>
+                    <th class="p-2.5 text-right w-28">C. Unit</th>
+                    <th class="p-2.5 text-right w-32 border-r border-slate-800">Valor Total</th>
+                    <!-- Salidas -->
+                    <th class="p-2.5 text-right w-24">Cant</th>
+                    <th class="p-2.5 text-right w-28">C. Unit</th>
+                    <th class="p-2.5 text-right w-32 border-r border-slate-800">Valor Total</th>
+                    <!-- Saldos -->
+                    <th class="p-2.5 text-right w-24">Cant</th>
+                    <th class="p-2.5 text-right w-36">Valor Total</th>
+                  </tr>
+                </thead>
+                <tbody id="kardex-tbody">
+                  <!-- Filas inyectadas por app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pedagogical Step-by-Step Sale Breakdown -->
+          <div class="glass-panel rounded-2xl p-6 border border-purple-500/30 shadow-xl flex flex-col gap-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div class="flex items-center gap-2.5">
+                <div class="p-1.5 rounded-lg bg-purple-500/20 text-purple-300">
+                  <span class="material-symbols-outlined text-[20px]">psychology_alt</span>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-white tracking-tight">Procedimiento Paso a Paso (Para tu Cuaderno)</h3>
+                  <p class="text-xs text-slate-400">Explicación clara de qué compra se tomó cada unidad y cómo se determinó su costo.</p>
+                </div>
+              </div>
+            </div>
+
+            <div id="pedagogical-steps-container" class="space-y-3">
+              <!-- Tarjetas dinámicas inyectadas por app.js -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- INVENTARIO PERIÓDICO CONTAINER -->
+        <div id="kardex-periodico-container" class="hidden flex-col gap-6">
+          <div class="glass-panel rounded-2xl p-6 border border-emerald-500/30 shadow-xl flex flex-col gap-4">
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+              <div class="p-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">
+                <span class="material-symbols-outlined text-[24px]">inventory_2</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-white">Estado de Costo de Ventas (Juego de Inventarios)</h3>
+                <p class="text-xs text-slate-300">Fórmula clásica del Sistema Periódico al cierre del ejercicio contable.</p>
+              </div>
+            </div>
+
+            <div class="p-5 rounded-xl bg-surface-container-low border border-slate-800 font-mono text-sm space-y-3 max-w-2xl mx-auto w-full">
+              <div class="flex items-center justify-between text-slate-300 pb-2 border-b border-slate-800">
+                <span>(+) Inventario Inicial:</span>
+                <span id="periodico-ii" class="text-emerald-300 font-bold">$ 0</span>
+              </div>
+              <div class="flex items-center justify-between text-slate-300 pb-2 border-b border-slate-800">
+                <span>(+) Compras Netas del Periodo:</span>
+                <span id="periodico-compras" class="text-emerald-300 font-bold">$ 0</span>
+              </div>
+              <div class="flex items-center justify-between text-white font-bold pb-2 border-b border-slate-700 bg-slate-900/60 p-2 rounded">
+                <span>(=) Mercancía Disponible para la Venta:</span>
+                <span id="periodico-disponible" class="text-cyan-300 font-extrabold">$ 0</span>
+              </div>
+              <div class="flex items-center justify-between text-slate-300 pb-2 border-b border-slate-800">
+                <span>(-) Inventario Final (Conteo Físico):</span>
+                <span id="periodico-if" class="text-rose-300 font-bold">$ 0</span>
+              </div>
+              <div class="flex items-center justify-between text-white font-extrabold text-base bg-emerald-950/40 border border-emerald-400/40 p-3 rounded-xl">
+                <span>(=) COSTO DE VENTAS:</span>
+                <span id="periodico-cv" class="text-emerald-300 font-mono text-lg">$ 0</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-cyan-500/30 text-xs text-slate-300 leading-relaxed">
+              <strong class="text-cyan-300">Criterio de Valuación Aplicado:</strong>
+              <p id="periodico-explicacion" class="mt-1"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 Footer Navigation -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+          <button onclick="goToStep(2)" class="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">arrow_back</span> Editar Operaciones
+          </button>
+          <button onclick="goToStep(4)" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white text-xs font-extrabold shadow-[0_0_20px_rgba(37,99,235,0.4)] flex items-center gap-2 transition-all active:scale-95">
+            <span>Ver Comparativa Multimétodo Lado a Lado</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PASO 4: ANÁLISIS COMPARATIVO LADO A LADO   -->
+      <!-- ========================================== -->
+      <section id="section-step-4" class="hidden flex-col gap-6">
+
+        <!-- Top Step Ribbon -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 glass-panel px-5 py-3 rounded-2xl border border-cyan-500/25 shadow-[0_10px_35px_rgba(0,0,0,0.45)]">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-gradient-to-r from-blue-600/30 to-cyan-500/30 border border-cyan-400/50 text-cyan-300 font-mono text-[11px] uppercase tracking-wider font-extrabold shadow-sm">
+              Paso 4 de 4
+            </span>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="font-bold tracking-tight text-white">Análisis Comparativo</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-400/30 font-semibold">
+                PEPS vs UEPS vs Promedio
+              </span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="window.print()" class="px-3.5 py-1.5 rounded-xl bg-surface-container-high/90 hover:bg-surface-bright text-slate-300 hover:text-white text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-colors">
+              <span class="material-symbols-outlined text-[16px]">print</span> Imprimir / PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- Side-by-Side Comparison Table -->
+        <div class="glass-panel rounded-2xl border border-blue-500/30 shadow-xl overflow-hidden flex flex-col">
+          <div class="p-4 border-b border-slate-800 bg-surface-container-low/60 flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-bold text-white">Tabla Comparativa Simultánea</h3>
+              <p class="text-xs text-slate-400">Observa cómo cambian los resultados aplicando exactamente las mismas operaciones.</p>
+            </div>
+            <span class="text-xs font-mono text-cyan-300 font-bold px-2.5 py-1 rounded-lg bg-cyan-950/80 border border-cyan-500/30">
+              3 Métodos
+            </span>
+          </div>
+
+          <div class="overflow-x-auto w-full">
+            <table class="w-full text-left border-collapse min-w-[700px]">
+              <thead>
+                <tr class="bg-surface-container-lowest text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                  <th class="p-4 w-1/3">Criterio Contable</th>
+                  <th class="p-4 text-center text-cyan-300 bg-blue-950/30 border-x border-slate-800">PEPS (FIFO)</th>
+                  <th class="p-4 text-center text-purple-300 bg-purple-950/30 border-r border-slate-800">UEPS (LIFO)</th>
+                  <th class="p-4 text-center text-emerald-300 bg-emerald-950/30">Promedio Ponderado</th>
+                </tr>
+              </thead>
+              <tbody id="comparative-tbody">
+                <!-- Renderizado por app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pedagogical Insights Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-5 rounded-2xl bg-surface-container-low border border-cyan-500/30 flex flex-col gap-2">
+            <div class="flex items-center gap-2 text-cyan-300 font-bold text-sm">
+              <span class="material-symbols-outlined text-[18px]">trending_up</span>
+              <span>PEPS: Mayor Utilidad</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              En épocas de precios crecientes, asigna costos viejos y bajos a las ventas, generando un Costo de Ventas menor y una Utilidad Bruta más alta.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-surface-container-low border border-purple-500/30 flex flex-col gap-2">
+            <div class="flex items-center gap-2 text-purple-300 font-bold text-sm">
+              <span class="material-symbols-outlined text-[18px]">trending_down</span>
+              <span>UEPS: Menor Impuesto</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Descarga primero los costos más recientes y altos. Esto incrementa el Costo de Ventas y reduce artificialmente la utilidad contable, pagando menos impuesto sobre la renta.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-surface-container-low border border-emerald-500/30 flex flex-col gap-2">
+            <div class="flex items-center gap-2 text-emerald-300 font-bold text-sm">
+              <span class="material-symbols-outlined text-[18px]">balance</span>
+              <span>Promedio: Estabilidad</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Suaviza las oscilaciones y picos bruscos de precios. Cada compra recalcula un único costo medio ponderado válido para todas las existencias.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 4 Footer Navigation -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+          <button onclick="goToStep(3)" class="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">arrow_back</span> Regresar al Kardex
+          </button>
+          <button onclick="goToStep(1)" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white text-xs font-extrabold shadow-md flex items-center gap-2 transition-all active:scale-95">
+            <span class="material-symbols-outlined text-[18px]">restart_alt</span> Configurar Nuevo Ejercicio
+          </button>
+        </div>
+
       </section>
 
     </div>
   </main>
 
-  <!-- 8 FAQ MODAL (PREGUNTAS FRECUENTES DIDÁCTICAS) -->
+  <!-- ========================================== -->
+  <!-- BANCO DE EJERCICIOS & TALLERES (MODAL)    -->
+  <!-- ========================================== -->
+  <div id="exercise-bank-modal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-2xl max-h-[90vh] rounded-2xl border border-cyan-500/40 shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="p-5 border-b border-cyan-500/30 flex items-center justify-between bg-cyan-950/40">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300">
+            <span class="material-symbols-outlined text-[24px]">folder_special</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white tracking-tight">Banco de Talleres para Estudiar</h3>
+            <p class="text-xs text-cyan-200/80">Selecciona un ejercicio predefinido o creado por la comunidad</p>
+          </div>
+        </div>
+        <button onclick="closeExerciseBankModal()" class="w-8 h-8 rounded-lg bg-surface-container-high hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-slate-700 flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-3" id="exercise-bank-list">
+        <!-- Renderizado dinámicamente -->
+      </div>
+
+      <div class="p-4 border-t border-slate-800 bg-surface-container-low flex justify-end">
+        <button onclick="closeExerciseBankModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-colors">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 8 FAQ MODAL (PREGUNTAS FRECUENTES)         -->
+  <!-- ========================================== -->
   <div id="faq-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-3xl max-h-[90vh] rounded-2xl border border-purple-500/40 shadow-[0_0_50px_rgba(168,85,247,0.3)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
       
-      <!-- FAQ Modal Header -->
       <div class="p-5 border-b border-purple-500/30 flex items-center justify-between bg-purple-950/40">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-400/50 flex items-center justify-center text-purple-300">
@@ -578,7 +1024,6 @@
         </button>
       </div>
 
-      <!-- FAQ Modal Body (Scrollable Accordions) -->
       <div class="p-5 overflow-y-auto space-y-3" id="faq-accordion-list">
         
         <!-- FAQ 1 -->
@@ -699,7 +1144,6 @@
 
       </div>
 
-      <!-- FAQ Modal Footer -->
       <div class="p-4 border-t border-purple-500/30 flex justify-end bg-surface-container-low">
         <button onclick="closeFaqModal()" class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition-colors shadow-md">
           Entendido, cerrar guía
@@ -709,7 +1153,9 @@
     </div>
   </div>
 
-  <!-- FORMULAS MODAL -->
+  <!-- ========================================== -->
+  <!-- FORMULAS MODAL                             -->
+  <!-- ========================================== -->
   <div id="formulas-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
     <div class="glass-card w-full max-w-xl rounded-2xl border border-cyan-500/40 p-6 shadow-[0_0_50px_rgba(56,189,248,0.25)] flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
       <div class="flex items-center justify-between border-b border-cyan-500/30 pb-3">
@@ -757,17 +1203,11 @@
     </div>
   </footer>
 
-  <!-- Application Logic -->
-  <script>
-    // Application State
-    const AppState = {
-      system: 'permanente',     // 'permanente' | 'periodico'
-      method: 'peps',           // 'peps' | 'ueps' | 'promedio'
-      isInflation: true,
-      useSampleData: true,
-      currentStep: 1
-    };
+  <!-- Application Logic (ES Module) -->
+  <script type="module" src="./js/app.js"></script>
 
+  <!-- Inline Helper for Modals & Simple UI functions -->
+  <script>
     const tipData = {
       perecederos: {
         rec: "RECOMENDADO: PEPS",
@@ -795,163 +1235,64 @@
       }
     };
 
-    function selectSystem(system) {
-      AppState.system = system;
-      const cardPerm = document.getElementById('card-permanente');
-      const cardPeri = document.getElementById('card-periodico');
-      const checkPerm = document.getElementById('check-permanente');
-      const checkPeri = document.getElementById('check-periodico');
-
-      if (system === 'permanente') {
-        cardPerm.className = "group relative rounded-2xl p-6 flex flex-col justify-between cursor-pointer transition-all duration-300 glass-panel border-2 border-cyan-400 neon-glow-blue hover:shadow-[0_0_35px_rgba(56,189,248,0.45)]";
-        cardPeri.className = "group relative rounded-2xl p-6 flex flex-col justify-between cursor-pointer transition-all duration-300 glass-panel hover:bg-surface-container-high/80 border-2 border-slate-700/60 hover:border-slate-500 shadow-lg";
-
-        checkPerm.className = "w-6 h-6 rounded-full border-2 border-cyan-300 bg-gradient-to-tr from-blue-600 to-cyan-400 text-white flex items-center justify-center transition-all shadow-[0_0_10px_#38bdf8]";
-        checkPerm.innerHTML = '<span class="material-symbols-outlined text-[15px] font-bold">check</span>';
-
-        checkPeri.className = "w-6 h-6 rounded-full border-2 border-slate-600 bg-transparent flex items-center justify-center transition-all";
-        checkPeri.innerHTML = '<span class="material-symbols-outlined text-[15px] font-bold hidden">check</span>';
-      } else {
-        cardPeri.className = "group relative rounded-2xl p-6 flex flex-col justify-between cursor-pointer transition-all duration-300 glass-panel border-2 border-emerald-400 neon-glow-emerald hover:shadow-[0_0_35px_rgba(52,211,153,0.45)]";
-        cardPerm.className = "group relative rounded-2xl p-6 flex flex-col justify-between cursor-pointer transition-all duration-300 glass-panel hover:bg-surface-container-high/80 border-2 border-slate-700/60 hover:border-slate-500 shadow-lg";
-
-        checkPeri.className = "w-6 h-6 rounded-full border-2 border-emerald-300 bg-gradient-to-tr from-emerald-600 to-teal-400 text-white flex items-center justify-center transition-all shadow-[0_0_10px_#34d399]";
-        checkPeri.innerHTML = '<span class="material-symbols-outlined text-[15px] font-bold">check</span>';
-
-        checkPerm.className = "w-6 h-6 rounded-full border-2 border-slate-600 bg-transparent flex items-center justify-center transition-all";
-        checkPerm.innerHTML = '<span class="material-symbols-outlined text-[15px] font-bold hidden">check</span>';
-      }
-
-      updateSummary();
-    }
-
-    function selectMethod(method) {
-      AppState.method = method;
-      const methods = ['peps', 'ueps', 'promedio'];
-
-      methods.forEach(m => {
-        const card = document.getElementById(`btn-method-${m}`);
-        const check = card.querySelector('.check-icon');
-
-        if (m === method) {
-          if (m === 'peps') {
-            card.className = "cursor-pointer rounded-2xl p-4 bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-600 text-white border-2 border-cyan-300 neon-glow-blue transition-all duration-200 transform scale-[1.015]";
-          } else if (m === 'ueps') {
-            card.className = "cursor-pointer rounded-2xl p-4 bg-gradient-to-br from-purple-700 via-indigo-700 to-fuchsia-600 text-white border-2 border-purple-300 shadow-[0_0_25px_rgba(167,139,250,0.4)] transition-all duration-200 transform scale-[1.015]";
-          } else {
-            card.className = "cursor-pointer rounded-2xl p-4 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 text-white border-2 border-emerald-300 neon-glow-emerald transition-all duration-200 transform scale-[1.015]";
-          }
-          if (check) {
-            check.className = "w-5 h-5 rounded-full bg-white text-slate-900 flex items-center justify-center text-xs font-bold check-icon shadow opacity-100";
-            check.innerText = "✓";
-          }
-        } else {
-          card.className = "cursor-pointer rounded-2xl p-4 bg-surface-container/90 hover:bg-surface-container-high text-on-surface-variant border-2 border-slate-700/60 hover:border-slate-500 transition-all duration-200";
-          if (check) {
-            check.className = "w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center text-xs check-icon opacity-0";
-          }
-        }
-      });
-
-      updateSummary();
-    }
-
     function showTip(key) {
       const data = tipData[key];
       if (!data) return;
 
       ['perecederos', 'impuestos', 'grano', 'parciales'].forEach(p => {
         const pill = document.getElementById(`pill-${p}`);
-        if (p === key) {
-          pill.className = "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-[0_0_12px_rgba(56,189,248,0.4)] border border-cyan-300/40";
-        } else {
-          pill.className = "px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all bg-surface-container-high/90 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500";
+        if (pill) {
+          if (p === key) {
+            pill.className = "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-[0_0_12px_rgba(56,189,248,0.4)] border border-cyan-300/40";
+          } else {
+            pill.className = "px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all bg-surface-container-high/90 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500";
+          }
         }
       });
 
-      document.getElementById('tip-recommended-badge').innerText = data.rec;
-      document.getElementById('tip-subtag').innerText = data.sub;
-      document.getElementById('tip-text').innerText = data.text;
-      document.getElementById('tip-icon').innerHTML = `<span class="material-symbols-outlined text-[20px]">${data.icon}</span>`;
+      const b = document.getElementById('tip-recommended-badge');
+      const s = document.getElementById('tip-subtag');
+      const t = document.getElementById('tip-text');
+      const i = document.getElementById('tip-icon');
+      if (b) b.innerText = data.rec;
+      if (s) s.innerText = data.sub;
+      if (t) t.innerText = data.text;
+      if (i) i.innerHTML = `<span class="material-symbols-outlined text-[20px]">${data.icon}</span>`;
     }
 
+    let isInflation = true;
     function toggleScenario() {
-      AppState.isInflation = !AppState.isInflation;
+      isInflation = !isInflation;
       const pill = document.getElementById('scenario-pill');
-      if (AppState.isInflation) {
-        pill.innerHTML = '<span class="material-symbols-outlined text-[15px] text-emerald-400">trending_up</span> Inflación (Precios al alza)';
-        pill.className = "font-bold text-emerald-300 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]";
-      } else {
-        pill.innerHTML = '<span class="material-symbols-outlined text-[15px] text-purple-400">trending_flat</span> Precios estables';
-        pill.className = "font-bold text-purple-300 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(167,139,250,0.4)]";
+      if (pill) {
+        if (isInflation) {
+          pill.innerHTML = '<span class="material-symbols-outlined text-[15px] text-emerald-400">trending_up</span> Inflación (Precios al alza)';
+          pill.className = "font-bold text-emerald-300 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]";
+        } else {
+          pill.innerHTML = '<span class="material-symbols-outlined text-[15px] text-purple-400">trending_flat</span> Precios estables';
+          pill.className = "font-bold text-purple-300 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(167,139,250,0.4)]";
+        }
       }
     }
 
     function applyPreset(preset) {
       if (preset === 'prd') {
-        selectSystem('permanente');
-        selectMethod('peps');
+        window.selectSystem('permanente');
+        window.selectMethod('peps');
         showTip('parciales');
       } else if (preset === 'retail') {
-        selectSystem('permanente');
-        selectMethod('promedio');
+        window.selectSystem('permanente');
+        window.selectMethod('promedio');
         showTip('perecederos');
       }
     }
 
-    function updateSummary() {
-      const sysEl = document.getElementById('summary-system-text');
-      const methEl = document.getElementById('summary-method-text');
-      const colEl = document.getElementById('summary-columns-text');
-
-      if (AppState.system === 'permanente') {
-        sysEl.innerHTML = '<span class="material-symbols-outlined text-[15px] text-cyan-300">table_chart_view</span> Kardex Permanente';
-        colEl.innerText = "Entradas • Salidas • Existencias";
-      } else {
-        sysEl.innerHTML = '<span class="material-symbols-outlined text-[15px] text-emerald-300">inventory_2</span> Inventario Periódico';
-        colEl.innerText = "Inv. Inicial • Compras • Físico Final";
-      }
-
-      const methodNames = {
-        peps: 'PEPS (Primeras en salir)',
-        ueps: 'UEPS (Últimas en salir)',
-        promedio: 'Promedio Ponderado'
-      };
-
-      methEl.innerHTML = `<span class="material-symbols-outlined text-[15px] text-emerald-300">check_circle</span> ${methodNames[AppState.method]}`;
-    }
-
-    function goToStep(step) {
-      AppState.currentStep = step;
-      if (step === 1) {
-        document.getElementById('section-step-1').classList.remove('hidden');
-        document.getElementById('section-step-2').classList.add('hidden');
-      } else if (step === 2) {
-        document.getElementById('section-step-1').classList.add('hidden');
-        document.getElementById('section-step-2').classList.remove('hidden');
-      }
-    }
-
-    function handleContinue() {
-      const btn = document.getElementById('btn-submit');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Guardando configuración...</span>';
-      
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        goToStep(2);
-      }, 350);
-    }
-
-    // FAQ Modal Controllers
     function openFaqModal() {
       document.getElementById('faq-modal').classList.remove('hidden');
     }
-
     function closeFaqModal() {
       document.getElementById('faq-modal').classList.add('hidden');
     }
-
     function toggleFaq(num) {
       const ans = document.getElementById(`faq-ans-${num}`);
       const chevron = document.getElementById(`faq-chevron-${num}`);
@@ -964,24 +1305,21 @@
       }
     }
 
-    // Formulas Modal Controllers
     function openFormulasModal() {
       document.getElementById('formulas-modal').classList.remove('hidden');
     }
-
     function closeFormulasModal() {
       document.getElementById('formulas-modal').classList.add('hidden');
     }
 
-    // Close Modals on ESC
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeFaqModal();
         closeFormulasModal();
+        if (window.closeExerciseBankModal) window.closeExerciseBankModal();
       }
     });
 
-    // Close on backdrop click
     document.getElementById('faq-modal').addEventListener('click', (e) => {
       if (e.target.id === 'faq-modal') closeFaqModal();
     });
