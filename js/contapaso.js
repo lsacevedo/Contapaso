@@ -1158,7 +1158,198 @@ window.loadExerciseFromBank = function(exerciseId) {
 };
 
 // ==========================================
-// 10. MODALES, TIPS Y PRESETS
+// 10. GENERADOR DE EJERCICIOS Y TUTOR DE PRÁCTICA
+// ==========================================
+const SECTORES_EJEMPLOS = [
+  { id: 'supermercado', nombre: 'Abarrotes & Supermercado', item: 'Bultos de Café Gourmet', basePrecio: 15000 },
+  { id: 'farmacia', nombre: 'Farmacia & Medicinas', item: 'Cajas de Vitaminas C 1000mg', basePrecio: 12000 },
+  { id: 'tecnologia', nombre: 'Tecnología & Accesorios', item: 'Auriculares Bluetooth Pro', basePrecio: 45000 },
+  { id: 'ropa', nombre: 'Boutique & Ropa', item: 'Camisetas Algodón Pima', basePrecio: 28000 },
+  { id: 'ferreteria', nombre: 'Ferretería & Construcción', item: 'Galones de Pintura Tipo 1', basePrecio: 35000 }
+];
+
+window.ejercicioGeneradoActual = null;
+
+window.generarNuevoEjercicio = function(nivel = 'intermedio', sectorId = 'aleatorio') {
+  let sector = SECTORES_EJEMPLOS.find(s => s.id === sectorId);
+  if (!sector || sectorId === 'aleatorio') {
+    sector = SECTORES_EJEMPLOS[Math.floor(Math.random() * SECTORES_EJEMPLOS.length)];
+  }
+
+  const basePrice = sector.basePrecio;
+  const operaciones = [];
+  let currentStock = 0;
+  let opIndex = 1;
+
+  // 1. Inventario Inicial
+  const cantInicial = nivel === 'basico' ? 50 : nivel === 'intermedio' ? 100 : 120;
+  operaciones.push({
+    id: opIndex++,
+    tipo: 'inicial',
+    fecha: '01/Nov',
+    detalle: `Inv. Inicial: ${sector.item}`,
+    cantidad: cantInicial,
+    costoUnitario: basePrice
+  });
+  currentStock += cantInicial;
+
+  // 2. Compra 1 (generalmente con precio superior por inflación)
+  const inflacion1 = Math.round(basePrice * 1.15 / 1000) * 1000;
+  const cantCompra1 = nivel === 'basico' ? 40 : 60;
+  operaciones.push({
+    id: opIndex++,
+    tipo: 'compra',
+    fecha: '04/Nov',
+    detalle: 'Compra Factura #201',
+    cantidad: cantCompra1,
+    costoUnitario: inflacion1
+  });
+  currentStock += cantCompra1;
+
+  // 3. Venta 1 (segura, nunca excede stock)
+  const cantVenta1 = nivel === 'basico' ? 60 : 70;
+  operaciones.push({
+    id: opIndex++,
+    tipo: 'venta',
+    fecha: '08/Nov',
+    detalle: 'Venta Factura #01',
+    cantidad: cantVenta1,
+    costoUnitario: 0
+  });
+  currentStock -= cantVenta1;
+
+  if (nivel !== 'basico') {
+    // 4. Compra 2
+    const inflacion2 = Math.round(basePrice * 1.30 / 1000) * 1000;
+    const cantCompra2 = nivel === 'avanzado' ? 80 : 50;
+    operaciones.push({
+      id: opIndex++,
+      tipo: 'compra',
+      fecha: '14/Nov',
+      detalle: 'Compra Factura #202',
+      cantidad: cantCompra2,
+      costoUnitario: inflacion2
+    });
+    currentStock += cantCompra2;
+
+    // 5. Venta 2
+    const cantVenta2 = nivel === 'avanzado' ? 90 : 80;
+    operaciones.push({
+      id: opIndex++,
+      tipo: 'venta',
+      fecha: '19/Nov',
+      detalle: 'Venta Factura #02',
+      cantidad: cantVenta2,
+      costoUnitario: 0
+    });
+    currentStock -= cantVenta2;
+  }
+
+  if (nivel === 'avanzado') {
+    // 6. Compra 3
+    const inflacion3 = Math.round(basePrice * 1.45 / 1000) * 1000;
+    operaciones.push({
+      id: opIndex++,
+      tipo: 'compra',
+      fecha: '24/Nov',
+      detalle: 'Compra Factura #203',
+      cantidad: 50,
+      costoUnitario: inflacion3
+    });
+    currentStock += 50;
+
+    // 7. Venta 3
+    operaciones.push({
+      id: opIndex++,
+      tipo: 'venta',
+      fecha: '28/Nov',
+      detalle: 'Venta Factura #03',
+      cantidad: 60,
+      costoUnitario: 0
+    });
+    currentStock -= 60;
+  }
+
+  // Generar enunciado en prosa para que la estudiante lo copie o lea
+  let enunciado = `TALLER PRÁCTICO DE INVENTARIOS\nEmpresa: "${sector.nombre}"\nArtículo: ${sector.item}\nNivel: ${nivel.toUpperCase()}\n\n`;
+  enunciado += `La empresa solicita resolver la tarjeta de Kardex y determinar el Costo de Ventas y el Inventario Final con los siguientes movimientos del mes:\n\n`;
+
+  operaciones.forEach((op, i) => {
+    if (op.tipo === 'inicial') {
+      enunciado += `${i + 1}. [${op.fecha}] Saldo inicial en bodega de ${op.cantidad} unidades a ${formatCurrency(op.costoUnitario)} cada una.\n`;
+    } else if (op.tipo === 'compra') {
+      enunciado += `${i + 1}. [${op.fecha}] Compra según ${op.detalle} de ${op.cantidad} unidades a ${formatCurrency(op.costoUnitario)} c/u.\n`;
+    } else {
+      enunciado += `${i + 1}. [${op.fecha}] Venta según ${op.detalle} de ${op.cantidad} unidades al cliente.\n`;
+    }
+  });
+
+  enunciado += `\nConsignas a resolver:\n`;
+  enunciado += `a) Elaborar el Kardex por el método PEPS y determinar el Costo de Ventas.\n`;
+  enunciado += `b) Elaborar el Kardex por Promedio Ponderado Móvil.\n`;
+  enunciado += `c) Comparar ambos métodos y explicar cuál genera mayor utilidad bruta.\n`;
+
+  window.ejercicioGeneradoActual = {
+    titulo: `Taller de ${sector.nombre} (${nivel.toUpperCase()})`,
+    sector: sector.nombre,
+    item: sector.item,
+    nivel: nivel,
+    enunciado: enunciado,
+    operaciones: operaciones
+  };
+
+  // Actualizar la interfaz del modal
+  const elEnunciado = document.getElementById('gen-enunciado-text');
+  const elTitulo = document.getElementById('gen-taller-titulo');
+  const elBadge = document.getElementById('gen-taller-badge');
+  const btnCargar = document.getElementById('btn-cargar-taller-gen');
+
+  if (elEnunciado) elEnunciado.value = enunciado;
+  if (elTitulo) elTitulo.innerText = window.ejercicioGeneradoActual.titulo;
+  if (elBadge) elBadge.innerText = `${operaciones.length} Operaciones • Nivel ${nivel.toUpperCase()}`;
+  if (btnCargar) btnCargar.disabled = false;
+
+  return window.ejercicioGeneradoActual;
+};
+
+window.cargarEjercicioGeneradoAlTaller = function() {
+  if (!window.ejercicioGeneradoActual || !window.ejercicioGeneradoActual.operaciones) {
+    alert("Primero genera un ejercicio.");
+    return;
+  }
+
+  window.AppState.operations = JSON.parse(JSON.stringify(window.ejercicioGeneradoActual.operaciones));
+  window.closeGeneradorModal();
+  window.goToStep(2);
+};
+
+window.copiarEnunciadoGenerado = function() {
+  if (!window.ejercicioGeneradoActual) return;
+  navigator.clipboard.writeText(window.ejercicioGeneradoActual.enunciado).then(() => {
+    const btn = document.getElementById('btn-copiar-enunciado');
+    if (btn) {
+      const original = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span> ¡Copiado!';
+      setTimeout(() => btn.innerHTML = original, 2000);
+    }
+  });
+};
+
+window.openGeneradorModal = function() {
+  const modal = document.getElementById('generador-ejercicios-modal');
+  if (modal) modal.classList.remove('hidden');
+  if (!window.ejercicioGeneradoActual) {
+    window.generarNuevoEjercicio('intermedio', 'aleatorio');
+  }
+};
+
+window.closeGeneradorModal = function() {
+  const modal = document.getElementById('generador-ejercicios-modal');
+  if (modal) modal.classList.add('hidden');
+};
+
+// ==========================================
+// 11. MODALES, TIPS Y PRESETS
 // ==========================================
 const tipData = {
   perecederos: {
@@ -1278,11 +1469,12 @@ window.addEventListener('keydown', (e) => {
     window.closeFaqModal();
     window.closeFormulasModal();
     window.closeExerciseBankModal();
+    window.closeGeneradorModal();
   }
 });
 
 // ==========================================
-// 11. INICIALIZACIÓN INMEDIATA
+// 12. INICIALIZACIÓN INMEDIATA
 // ==========================================
 function initApp() {
   window.selectSystem(window.AppState.system);
@@ -1308,6 +1500,13 @@ function initApp() {
   if (bankModal) {
     bankModal.addEventListener('click', (e) => {
       if (e.target.id === 'exercise-bank-modal') window.closeExerciseBankModal();
+    });
+  }
+
+  const genModal = document.getElementById('generador-ejercicios-modal');
+  if (genModal) {
+    genModal.addEventListener('click', (e) => {
+      if (e.target.id === 'generador-ejercicios-modal') window.closeGeneradorModal();
     });
   }
 }

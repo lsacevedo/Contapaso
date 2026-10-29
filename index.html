@@ -128,6 +128,12 @@
 
       <!-- Right Header Tools -->
       <div class="flex items-center gap-2 shrink-0">
+        <!-- Botón Destacado: Pedir Más Ejercicios -->
+        <button onclick="openGeneradorModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-extrabold border border-cyan-400/50 shadow-[0_0_15px_rgba(56,189,248,0.4)] transition-all active:scale-95" title="Pedir o generar un nuevo ejercicio de práctica">
+          <span class="material-symbols-outlined text-[17px] text-amber-300 animate-pulse">auto_awesome</span>
+          <span>Pedir Más Ejercicios</span>
+        </button>
+
         <!-- Banco de Ejercicios -->
         <button onclick="openExerciseBankModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-200 text-xs font-bold border border-cyan-400/40 transition-all shadow-sm active:scale-95" title="Explorar banco de ejercicios de prueba">
           <span class="material-symbols-outlined text-[17px] text-cyan-300">folder_open</span>
@@ -497,6 +503,22 @@
                 Cargar e ir a Paso 2
               </button>
             </div>
+
+            <!-- Quick Practice Generator Trigger -->
+            <div class="flex items-center justify-between p-3.5 rounded-xl bg-gradient-to-r from-blue-950/40 via-purple-950/30 to-slate-900 border border-purple-500/30">
+              <div class="flex items-center gap-2.5">
+                <div class="p-1 rounded-lg bg-purple-500/20 text-purple-300">
+                  <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-xs font-bold text-white">¿Necesitas practicar para tu parcial?</span>
+                  <span class="text-[11px] text-slate-400">Pide ejercicios ilimitados de farmacia, supermercado o tecnología</span>
+                </div>
+              </div>
+              <button onclick="openGeneradorModal()" class="px-3.5 py-1.5 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-400/40 text-xs font-bold transition-all shrink-0">
+                Pedir Ejercicio
+              </button>
+            </div>
           </div>
 
           <!-- Right: Live Summary & Action (5 cols) -->
@@ -577,8 +599,11 @@
 
           <!-- Quick Action Buttons -->
           <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="openGeneradorModal()" type="button" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600/40 via-cyan-600/40 to-indigo-600/40 hover:from-blue-600/60 hover:to-cyan-600/60 text-cyan-200 text-xs font-bold border border-cyan-400/50 shadow-sm transition-all flex items-center gap-1.5 active:scale-95">
+              <span class="material-symbols-outlined text-[16px] text-amber-300">auto_awesome</span> Pedir nuevo ejercicio
+            </button>
             <button onclick="loadPRDExample()" type="button" class="px-3 py-1.5 rounded-xl bg-surface-container-high/90 hover:bg-cyan-600/30 text-cyan-300 text-xs font-bold border border-cyan-500/30 transition-all flex items-center gap-1">
-              <span class="material-symbols-outlined text-[15px]">restore</span> Restaurar caso PRD
+              <span class="material-symbols-outlined text-[15px]">restore</span> Caso PRD
             </button>
             <button onclick="clearOperations()" type="button" class="px-3 py-1.5 rounded-xl bg-surface-container-high/90 hover:bg-rose-600/30 text-rose-300 text-xs font-bold border border-rose-500/30 transition-all flex items-center gap-1">
               <span class="material-symbols-outlined text-[15px]">delete_sweep</span> Vaciar
@@ -956,6 +981,23 @@
           </div>
         </div>
 
+        <!-- CTA Banner: Seguir Practicando -->
+        <div class="p-5 rounded-2xl bg-gradient-to-r from-blue-950/60 via-purple-950/40 to-slate-900 border border-cyan-400/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[28px] text-amber-300">auto_awesome</span>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-white tracking-tight">¿Quieres poner a prueba lo aprendido con otro caso?</h4>
+              <p class="text-xs text-slate-300">Genera un nuevo ejercicio adaptado a tu nivel (Básico, Intermedio o Parcial Universitario) para resolver en tu cuaderno.</p>
+            </div>
+          </div>
+          <button onclick="openGeneradorModal()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-extrabold shadow-md active:scale-95 transition-all shrink-0 flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">add_circle</span>
+            <span>Pedir Nuevo Ejercicio</span>
+          </button>
+        </div>
+
         <!-- Step 4 Footer Navigation -->
         <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
           <button onclick="goToStep(3)" class="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1">
@@ -970,6 +1012,109 @@
 
     </div>
   </main>
+
+  <!-- ========================================== -->
+  <!-- GENERADOR DE EJERCICIOS (MODAL)           -->
+  <!-- ========================================== -->
+  <div id="generador-ejercicios-modal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-2xl max-h-[92vh] rounded-2xl border-2 border-cyan-400/50 shadow-[0_0_50px_rgba(56,189,248,0.3)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-cyan-500/30 flex items-center justify-between bg-gradient-to-r from-blue-950/60 via-cyan-950/40 to-slate-900">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-600 to-indigo-600 p-0.5 shadow-md flex items-center justify-center">
+            <div class="w-full h-full bg-[#070a13] rounded-[10px] flex items-center justify-center">
+              <span class="material-symbols-outlined text-[22px] text-amber-300 animate-pulse">auto_awesome</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white tracking-tight">Pedir Nuevos Ejercicios para Practicar</h3>
+            <p class="text-xs text-cyan-200/80">Genera talleres con casos realistas para resolver en tu cuaderno</p>
+          </div>
+        </div>
+        <button onclick="closeGeneradorModal()" class="w-8 h-8 rounded-lg bg-surface-container-high hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-slate-700 flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-5 overflow-y-auto space-y-4">
+        
+        <!-- Controls: Nivel y Sector -->
+        <div class="p-4 rounded-xl bg-surface-container-low border border-slate-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
+            <div class="flex flex-col gap-1">
+              <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Nivel de Dificultad:</label>
+              <select id="gen-select-nivel" class="bg-surface-container-lowest border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-cyan-400 focus:outline-none">
+                <option value="intermedio">Intermedio (2 compras, 2 ventas)</option>
+                <option value="basico">Básico (1 compra, 1 venta)</option>
+                <option value="avanzado">Parcial Universitario (3 compras, 3 ventas)</option>
+              </select>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sector / Empresa:</label>
+              <select id="gen-select-sector" class="bg-surface-container-lowest border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-cyan-400 focus:outline-none">
+                <option value="aleatorio">Aleatorio 🎲</option>
+                <option value="supermercado">Abarrotes & Supermercado 🛒</option>
+                <option value="farmacia">Farmacia & Medicinas 💊</option>
+                <option value="tecnologia">Tecnología & Accesorios 🎧</option>
+                <option value="ropa">Boutique & Ropa 👕</option>
+                <option value="ferreteria">Ferretería & Construcción 🔨</option>
+              </select>
+            </div>
+          </div>
+          <button onclick="generarNuevoEjercicio(document.getElementById('gen-select-nivel').value, document.getElementById('gen-select-sector').value)" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white text-xs font-extrabold shadow-md active:scale-95 transition-all self-end sm:self-auto shrink-0 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">refresh</span>
+            <span>Generar</span>
+          </button>
+        </div>
+
+        <!-- Enunciado Display Card -->
+        <div class="rounded-xl p-4 bg-slate-900/90 border border-cyan-500/30 flex flex-col gap-2.5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span id="gen-taller-titulo" class="font-bold text-sm text-white">Taller Práctico Generado</span>
+            </div>
+            <span id="gen-taller-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30 font-bold uppercase">
+              Listo para Resolver
+            </span>
+          </div>
+
+          <textarea id="gen-enunciado-text" readonly rows="8" class="w-full bg-black/40 border border-slate-800 rounded-lg p-3 text-xs font-mono text-cyan-100 leading-relaxed resize-none focus:outline-none"></textarea>
+
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1">
+            <button id="btn-copiar-enunciado" onclick="copiarEnunciadoGenerado()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-surface-container-high hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center gap-1.5 transition-colors">
+              <span class="material-symbols-outlined text-[16px]">content_copy</span>
+              <span>Copiar Enunciado para el Cuaderno</span>
+            </button>
+            <button id="btn-cargar-taller-gen" onclick="cargarEjercicioGeneradoAlTaller()" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-xs font-extrabold shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <span>Resolver este Ejercicio en ContaPaso</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Pedagogical Hint Card -->
+        <div class="p-3.5 rounded-xl bg-purple-950/30 border border-purple-500/30 text-xs text-purple-200 flex items-start gap-2.5">
+          <span class="material-symbols-outlined text-purple-400 text-[20px] shrink-0 mt-0.5">tips_and_updates</span>
+          <div>
+            <strong class="text-white">Consejo didáctico:</strong>
+            <p class="text-[11px] text-purple-200/90 mt-0.5">Copia el enunciado en tu libreta, resuelve el Kardex a lápiz con tus propias cuentas y luego haz clic en <em>"Resolver este Ejercicio en ContaPaso"</em> para contrastar de inmediato tus resultados y ver dónde estaban las dudas.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-800 bg-surface-container-low flex justify-end">
+        <button onclick="closeGeneradorModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-colors">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ========================================== -->
   <!-- BANCO DE EJERCICIOS & TALLERES (MODAL)    -->
